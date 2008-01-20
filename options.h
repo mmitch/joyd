@@ -1,5 +1,5 @@
-#ifndef _CONFIG_H_INCLUDED_
-#define _CONFIG_H_INCLUDED_
+#ifndef _OPTIONS_H_INCLUDED_
+#define _OPTIONS_H_INCLUDED_
 
 /*
  * function prototypes

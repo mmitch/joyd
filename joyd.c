@@ -1,9 +1,9 @@
 /*
  *    joyd.c
  *
- *    this is the mail file of:
+ *    this is the main file of:
  *
- *    joyd 0.0.1   ---   The Joystick Daemon
+ *    joyd 0.0.2   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -72,12 +72,16 @@
  *  - added background mode
  */
 
+/*  joyd 0.0.2 2000-01-10
+ *
+ *  - the global variable config is now declared here and declared
+ *    external in joyd.h
+ *  - "joyd -v" prints the version number
+ */
+
 /*
  *  2do:
- *  - write joyd(1)
- *  - write joydrc(5)
  *  - implement shift_axes like shift_keys?
- *  - split the ActionLoop() function into smaller parts, it's way too big
  */
 
 /*****************************************************************************
@@ -97,12 +101,18 @@
  */
 
 #include "joyd.h"
-#include "config.h"
 #include "daemon.h"
 #include "joystick.h"
 #include "log.h"
+#include "options.h"
 #include "signal.h"
 #include "string.h"
+
+/*
+ * the global variable
+ */
+
+TCONFIG config;
 
 /*
  * now to the functions
@@ -113,6 +123,11 @@
 int main (int argc, char **argv)
 /* simple main program */
 {
+	if ((argc > 1) && (strcmp(argv[1],PRINT_VERSION) == 0)) {
+		printf(JOYD_VERSION "\n");
+		exit(0);
+	};
+
 	SetDefaultValues();
 
 	if (config.debug > 1) {

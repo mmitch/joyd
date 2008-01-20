@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.1   ---   The Joystick Daemon
+ *    joyd 0.0.2   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -29,6 +29,11 @@
  *  initial version
  */
 
+/*  joyd 0.0.2 2000-01-10
+ *
+ *  - the ActionLoop() function got split up into smaller parts
+ */
+
 /*****************************************************************************
  * now goes it loose...                                                      *
  *****************************************************************************/
@@ -44,7 +49,6 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <linux/joystick.h>
 
 /*
  * my headers and definitions
@@ -98,6 +102,92 @@ void CloseJoystick()
 }
 
 
+struct js_event WaitForJoystickEvent()
+/* Wait for joystick event */
+{
+	struct js_event js;
+
+	if (read(config.fd, &js, sizeof(struct js_event)) != sizeof(struct js_event)) {
+		perror("\njoyd: error reading");
+		exit (1);
+	}
+	return js;
+}
+
+
+void ExecuteCommands(long int axis_max,long int button_max)
+/* check which actions match and execute them */
+{
+	char buffer[256]; /* should be enough for three long integers */
+	int i;
+	int rc;
+
+	for (i=0;i<config.action_count;i++) {
+		if ((config.action[i].axes==axis_max) && (config.action[i].buttons==button_max)) {
+			/* first check for internal commands */
+			if (strcmp(config.action[i].command,config.action_exit) == 0) {
+				if (config.debug > 0) {
+					Print(stdout,"executing internal command: exit",NOTHING);
+				}
+				raise(SIGTERM);
+			} else if (strcmp(config.action[i].command,config.action_reread) == 0) {
+				if (config.debug > 0) {
+					Print(stdout,"executing internal command: reread configuration",NOTHING);
+				}
+				raise(SIGHUP);
+			} else {
+				if (config.debug > 0) {
+					Print(stdout,"executing external command: ",config.action[i].command);
+				}
+				rc=system(config.action[i].command);
+				if (config.debug > 1) {
+					sprintf(buffer,"%i",rc);
+					Print(stdout,"return code was: ",buffer);
+				}
+			}
+		}
+	}
+}
+
+
+void StoreJoystickEvent(struct js_event js,long int *const axis_normal,long int *const button_normal,long int *const button_shift)
+/* Store the joystick event */
+{
+	switch(js.type & ~JS_EVENT_INIT) {
+	case JS_EVENT_BUTTON:
+		/* shift or normal button? */
+		if ((1 << js.number) & config.shiftkeys) {
+			/* its a shift button */
+			/* first mask the button bit out */
+			*button_shift=(~((unsigned long) (1 << js.number))) & *button_shift;
+			/* then add the button status */
+			*button_shift=*button_shift | ((unsigned long) (js.value <<js.number));
+		} else {
+			/* its a normal button */
+			/* first mask the button bit out */
+			*button_normal=(~((unsigned long) (1 << js.number))) & *button_normal;
+			/* then add the button status */
+			*button_normal=*button_normal | ((unsigned long) (js.value <<js.number));
+		}
+		break;
+	case JS_EVENT_AXIS:
+		/* first mask both axis bits out */
+		*axis_normal=(~((unsigned long) (1 << (js.number*2)))) & *axis_normal;
+		*axis_normal=(~((unsigned long) (1 << ((js.number*2)+1)))) & *axis_normal;
+		/* now see whether its a high or a low value and set the bits */
+		if (js.value < config.cal[js.number].min) {
+			/* low value, low bit */
+			*axis_normal=*axis_normal | ((unsigned long) (1 << (js.number*2)));
+		}
+		if (js.value > config.cal[js.number].max) {
+			/* high value, high bit */
+			*axis_normal=*axis_normal | ((unsigned long) (1 << ((js.number*2+1))));
+		}
+		break;
+	}
+}
+
+	
 void ActionLoop()
 /* Here we listen to the joystick and start the actions */
 {
@@ -106,55 +196,17 @@ void ActionLoop()
 	unsigned long button_max=0;
 	unsigned long button_normal=0;
 	unsigned long button_shift=0;
-	int i;
-	int rc;
 	struct js_event js;
 	char buffer[256]; /* should be enough for three long integers */
 	
 	Print(stdout,JOYD_VERSION," is running");
 	
 	while (1) {
-		
-		/* Wait for joystick event */
-		if (read(config.fd, &js, sizeof(struct js_event)) != sizeof(struct js_event)) {
-			perror("\njoyd: error reading");
-			exit (1);
-		}
-		
-		/* Store the joystick event */
-		switch(js.type & ~JS_EVENT_INIT) {
-		case JS_EVENT_BUTTON:
-			/* shift or normal button? */
-			if ((1 << js.number) & config.shiftkeys) {
-				/* its a shift button */
-				/* first mask the button bit out */
-				button_shift=(~((unsigned long) (1 << js.number))) & button_shift;
-				/* then add the button status */
-				button_shift=button_shift | ((unsigned long) (js.value <<js.number));
-			} else {
-				/* its a normal button */
-				/* first mask the button bit out */
-				button_normal=(~((unsigned long) (1 << js.number))) & button_normal;
-				/* then add the button status */
-				button_normal=button_normal | ((unsigned long) (js.value <<js.number));
-			}
-			break;
-		case JS_EVENT_AXIS:
-			/* first mask both axis bits out */
-			axis_normal=(~((unsigned long) (1 << (js.number*2)))) & axis_normal;
-			axis_normal=(~((unsigned long) (1 << ((js.number*2)+1)))) & axis_normal;
-			/* now see whether its a high or a low value and set the bits */
-			if (js.value < config.cal[js.number].min) {
-				/* low value, low bit */
-				axis_normal=axis_normal | ((unsigned long) (1 << (js.number*2)));
-			}
-			if (js.value > config.cal[js.number].max) {
-				/* high value, high bit */
-				axis_normal=axis_normal | ((unsigned long) (1 << ((js.number*2+1))));
-			}
-			break;
-		}
-		
+
+		js=WaitForJoystickEvent();
+
+		StoreJoystickEvent(js,&axis_normal,&button_normal,&button_shift);
+
 		/* if a new button is pressed, remember this */
 		button_max = button_max | button_normal;
 		axis_max=axis_max | axis_normal;
@@ -170,34 +222,9 @@ void ActionLoop()
 		    && ((button_max > 0) || (axis_max > 0))) {
 			/* add the status of the shift buttons */
 			button_max=button_max | button_shift;
-			
-			/* check which actions match and execute them */
-			for (i=0;i<config.action_count;i++) {
-				if ((config.action[i].axes==axis_max) && (config.action[i].buttons==button_max)) {
-					/* first check for internal commands */
-					if (strcmp(config.action[i].command,config.action_exit) == 0) {
-						if (config.debug > 0) {
-							Print(stdout,"executing internal command: exit",NOTHING);
-						}
-						raise(SIGTERM);
-					} else if (strcmp(config.action[i].command,config.action_reread) == 0) {
-						if (config.debug > 0) {
-							Print(stdout,"executing internal command: reread configuration",NOTHING);
-						}
-						raise(SIGHUP);
-					} else {
-						if (config.debug > 0) {
-							Print(stdout,"executing external command: ",config.action[i].command);
-						}
-						rc=system(config.action[i].command);
-						if (config.debug > 1) {
-							sprintf(buffer,"%i",rc);
-							Print(stdout,"return code was: ",buffer);
-						}
-					}
-				}
-			}
 
+			ExecuteCommands(axis_max,button_max);
+			
 			button_max=0;
 			axis_max=0;
 		}

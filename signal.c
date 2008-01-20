@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.1   ---   The Joystick Daemon
+ *    joyd 0.0.2   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -29,6 +29,11 @@
  *  initial version
  */
 
+/*  joyd 0.0.2 2000-01-10
+ *
+ *  - changed #include "config.h" to #include "options.h"
+ */
+
 /*****************************************************************************
  * now goes it loose...                                                      *
  *****************************************************************************/
@@ -48,7 +53,7 @@
 #include "joyd.h"
 #include "signal.h"
 #include "log.h"
-#include "config.h"
+#include "options.h"
 #include "joystick.h"
 
 /*

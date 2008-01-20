@@ -62,7 +62,7 @@
 
 
 /* program name and version */
-#define JOYD_VERSION "joyd 0.0.1 2000-01-09"
+#define JOYD_VERSION "joyd 0.0.2 2000-01-10"
 
 /* length of buffer for joypad name */
 #define NAME_LENGTH 128
@@ -75,6 +75,9 @@
 
 /* this is the comment sign in the configuration file */
 #define COMMENT_SIGN '#'
+
+/* the command line argument used to show the version of joyd */
+#define PRINT_VERSION "-v"
 
 /*
  * The structure for calibration values
@@ -129,6 +132,6 @@ typedef struct sconfig {
  * variables...
  */
 
-TCONFIG config;
+extern TCONFIG config;
 
 #endif

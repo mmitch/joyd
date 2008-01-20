@@ -1,0 +1,196 @@
+.\" This file Copyright 2000 Christian Garbs <mitch@uni.de>
+.\" 
+.\" It may be distributed under the GNU Public License, version 2, or
+.\" any higher version.  See section COPYING of the GNU Public license
+.\" for conditions under which this file may be redistributed.
+.\"
+.\" As I don't have a clue of the Nroff format, this document is based
+.\" on the top(1) man page which is Copyright 1992 Robert J. Nation 
+.\" (nation@rocket.sanders.lockheed.com) and was afterwards modified
+.\" on 1994/04/25 by Michael Shields <mjshield@nyx.cs.du.edu> and on
+.\" 1996/01/27 by Helmut Geyer.
+.
+.de It
+.TP 0.5i
+.B "\\$1 "
+..
+.TH JOYDRC 5 "Jan 10 2000" "v0.0.2"
+.SH NAME
+.B joydrc
+\- configuration file for the joystick daemon
+.B joyd
+.
+.SH DESCRIPTION
+All configuration of
+.B joyd
+is done in the configuration file or in the installation
+defaults. There are some example configuration files within the source
+archive that
+.B joyd
+came in for you to look at and test.
+.PP
+In
+.B joyd
+every movement of your stick and every button corresponds to a
+number. It works like this:
+.PP
+.ft CW
+  number  movement
+ -----------------------------------------
+     1    axis 1 low  value   (left)
+     2    axis 1 high value   (right)
+     4    axis 2 low  value   (down)
+     8    axis 2 high value   (up)
+    16    axis 3 low  value
+    32    axis 3 high value
+    64    axis 4 low  value
+  [...]
+.ft CW
+.PP
+.ft CW
+  number  button
+ ---------------------------
+     1     Button 1
+     2     Button 2
+     4     Button 3
+     8     Button 4
+    16     Button 5
+  [...]
+.ft CW
+.PP
+To get a combination of two buttons or axes, just add their
+numbers. For example 5 would mean buttons 1 and 5 (or left and down,
+respectively).
+.PP
+If you use an analog device,
+.B joyd
+will have to decide when an axis has reached it's low or high
+value. The joystick will give back a value between \-16384 and 16387
+and
+.B joyd
+will compare it to two calibration variables. If the value is lower
+than the minimum calibration then it is considered as "low", if the
+value is higher than the maximum calibration then it is considered as
+"high". By changing these values, you can make your joystick act more
+(or less) sensitively.
+.
+.SH CONFIGURATION FILE FORMAT
+A configuration file is a plain ascii file. Lines beginning with # are
+treated as comments. Keep in mind that there has to be a line feed
+after the last line.
+.PP
+A configuration file is divided into three sections. The first section
+is started by
+.B [general]
+.PP
+The following variables can be set:
+.It "calmin n"
+The default minimum calibration is set to n.
+.It "calmax n"
+The default maximum calibration is set to n.
+.It "config s"
+This sets the configuration file to s. Only useful when you plan
+to reread the configuration file.
+.It "daemon b"
+This controls whether joyd will switch to daemon (background) mode (1)
+or not (0).
+.It "debug b"
+This sets the verbosity of status messages. 0 means be quiet, 1
+enables some warnings, 2 shows many status informations and 3 is used
+for debugging.
+.It "device s"
+This sets the device where the joystick is located to s.
+.It "exit s"
+This sets the command string that can be used to exit joyd to s.
+.It "reread s"
+This sets the command string to reread the configuration file to n.
+.It "shift n"
+The button(s) n will be used in shift mode.
+.It "stdout b"
+.B joyd
+will show its messages in stdout (1) or not (0).
+.It "syslog b"
+.B joyd
+will show its messages in the syslog (1) or not (0).
+.PP
+The next section is the
+.B [calibration]
+section. It contains lines with two numerical arguments: minimum and
+maximum calibration for each axis (the first line corresponds to axis
+1, the second to axis 2 and so forth).
+.PP
+If your joystick has more axes than there are in this section, the
+other axes will use the
+.B calmin
+and
+.B calmax
+default values.
+.PP
+The last section is the
+.B [action]
+section. It binds the commands to the joystick. The lines are in the
+format
+.PP
+.ft CW
+  a	b	c
+.ft CW
+.PP
+Where
+.B a
+is the number of the axes and
+.B b
+the number of the buttons (see above) that should trigger the command.
+.B c
+is the command string to be executed. The command should have a
+complete path. I you want to execute a command in the background, then
+append an \& to it (for example:
+.B /usr/bin/updatedb &
+). When a command is not executed in background,
+.B joyd
+will be blocked until the command is finished.
+.PP
+If
+.B c
+is the string that you defined as
+.B exit
+in the general section,
+.B joyd
+will exit when the button/axis condition is true. If
+.B c
+is the
+.B reread
+string, then
+.B joyd
+will reread it's configuration file. See the example configuration
+file
+.B joydrc.exit
+for this.
+.PP
+Here is an example:
+.PP
+.ft CW
+  1	2	/bin/echo Hello
+.ft CW
+.PP
+This will print
+.B Hello
+when you pull your joystick left (
+.B a
+=1) and press your 2nd button (
+.B b
+=2).
+.PP
+You can bind multiple commands to one combination of axes/buttons. The
+commands are then executed in the order they appear in the
+configuration file.
+.
+.SH "SEE ALSO"
+.BR joydrc(1)
+.
+.\"SH
+.\"BUGS
+.\".
+.SH AUTHOR
+.B joyd
+was written by Christian Garbs <mitch@uni.de>. Please send bug reports
+to him.

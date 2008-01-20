@@ -1,0 +1,116 @@
+.\" This file Copyright 2000 Christian Garbs <mitch@uni.de>
+.\" 
+.\" It may be distributed under the GNU Public License, version 2, or
+.\" any higher version.  See section COPYING of the GNU Public license
+.\" for conditions under which this file may be redistributed.
+.\"
+.\" As I don't have a clue of the Nroff format, this document is based
+.\" on the top(1) man page which is Copyright 1992 Robert J. Nation 
+.\" (nation@rocket.sanders.lockheed.com) and was afterwards modified
+.\" on 1994/04/25 by Michael Shields <mjshield@nyx.cs.du.edu> and on
+.\" 1996/01/27 by Helmut Geyer.
+.
+.de It
+.TP 0.5i
+.B "\\$1 "
+..
+.TH JOYD 1 "Jan 10 2000" "v0.0.2"
+.SH NAME
+.B joyd
+\- a joystick daemon
+.SH SYNOPSIS
+.B joyd
+.RB [ \-v | configfile ]
+.
+.SH DESCRIPTION
+.B joyd
+is a daemon that allows you to trigger commands on your computer
+by using your joystick. It can execute any program.
+.PP
+You can bind commands to single buttons, movements of your stick or
+combinations. There can be as much commands as you like, you can even
+bind multiple commands to one combination.
+.PP
+.B joyd
+uses very few resources: when nothing happens at the joystick
+port, it just sleeps, needing no CPU time.
+.PP
+When run in daemon mode,
+.B joyd
+switches to the background. It can itself still be controlled by
+joystick commands or signals (e.g. SIGHUP).
+.B joyd
+is also able to log its output to syslog. 
+.PP
+.SH "COMMAND\-LINE OPTIONS"
+.It -v
+.B joyd
+will print its version number and exit.
+.It configfile
+This is where
+.B joyd
+will look for a configuration file. If no configuration file is given,
+.B joyd
+will use the compiled in default.
+.PP
+.
+.SH RUNNING JOYD
+When
+.B joyd
+is started, it will either run in normal mode or in daemon
+(background) mode. This can be set within the configuration file. If 
+you want to stop a normal
+.B joyd
+simply press
+.B ctrl-c
+.PP
+If you want to stop a
+.B joyd
+daemon, you have to look up its PID using
+.B ps aux
+and then kill it by typing
+.B kill <PID>
+If you have only one
+.B joyd
+running, you could also say
+.B killall joyd
+Note that you can also bind the exit command to your joystick.
+
+When
+.B joyd
+is running, you can execute the commands given in the configuration
+file by using your joystick.
+.B joyd
+scans the axes and buttons of your joystick. Normally axis 1 is
+left-right and axis 2 is up-down. If your joystick provides more axes
+then you can also use them.
+
+The joystick buttons can be scanned in two modes: normal and
+shift. The normal mode executes a command after one or more buttons
+have been pressed and released. A shift button does not execute a
+command but can modify the behaviour of a normal key. A shift button
+does not have to be released. Look at the configuration file
+.B joydrc.shift
+for an example of this.
+
+When joyd receives the SIGHUP signal, it will reread its configuration
+file (for example
+.B kill -HUP <PID>
+ where PID can be found out using
+.B ps aux
+).
+.
+.SH FILES
+.I joydrc 
+The default configuration file.
+.
+.SH "SEE ALSO"
+.BR joydrc(5)
+.
+.\"SH
+.\"BUGS
+.\".
+.SH AUTHOR
+.B joyd
+was written by Christian Garbs <mitch@uni.de>. Please send bug reports
+to him.

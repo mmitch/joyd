@@ -1,5 +1,5 @@
 
-	joyd 0.0.1   ---   The Joystick Daemon
+	joyd 0.0.2   ---   The Joystick Daemon
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -45,9 +45,12 @@ First, unpack the .tar.gz-archive.
 If you want to change the installation defaults, take a look at
 "joyd.h" and edit it.
 
-Then type "make" to compile the binary. You can install the binary to
-/usr/local/bin/joyd by typing "make install" (you propably need to be
-root to do this).
+Then type "make" to compile the binary. You can install the binary and
+the manpages by typing "make install" (you propably need to be root to
+do this).
+
+If you want to uninstall the binary and the manpages, then type
+"make uninstall" (again, you propably need to be root).
 
 
   USING JOYD
@@ -56,6 +59,9 @@ root to do this).
 Start joyd as "joyd". It accepts one command line argument, this is
 where joyd will look for a configuration file. If no configuration
 file is given, joyd will use the compiled in default.
+
+If joyd is started with the command line argument "-v", it will print
+its version number and exit.
 
 When joyd is started, it will either run in normal mode or in daemon
 (background) mode. This can be set within the configuration file. If
@@ -118,7 +124,7 @@ a number. It works like this:
   [...]
 
 To get a combination of two buttons or axes, just add their
-numbers. For example 5 would man buttons 1 and 5 (or left and down,
+numbers. For example 5 would mean buttons 1 and 5 (or left and down,
 respectively).
 
 If you use an analog device, joyd will have to decide when an axis has
@@ -196,9 +202,9 @@ the joystick. The lines are in the format
 Where (a) is the number of the axes and (b) the number of the buttons (see
 above), that should trigger the command. (c) is the command string to
 be executed. The command should have a complete path. I you want to
-execute a command in the background, then start it with "&" (for
+execute a command in the background, then append an "&" to it (for
 example: "/usr/bin/updatedb &"). When a command is not executed in
-background, joyd will be blockes until the command is finished.
+background, joyd will be blocked until the command is finished.
 
 If (c) is the string that you defined as "exit" in the general section,
 joyd will exit when the button/axis condition is true. If (c) is the
@@ -215,6 +221,13 @@ press your 2nd button (b=2).
 You can bind multiple commands to one combination of axes/buttons. The
 commands are then executed in the order they appear in the
 configuration file.
+
+
+  THANKS
+  ~~~~~~
+
+Florian Paetz <fpaetz@gmx.de> for some suggestions on good C coding
+style and finding the "external" bug in v0.0.1
 
 
   CONTACT
@@ -234,4 +247,4 @@ joyd should also be available from MetaLab.unc.edu in the directory
 
 				________________________________
 				I hope that you find this useful
-				Christian, 2000-01-09
+				Christian, 2000-01-10
