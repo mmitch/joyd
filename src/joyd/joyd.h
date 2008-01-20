@@ -35,7 +35,7 @@
 
 /* show debug information?
    (0=be quiet, 1=some messages, 2=more messages, 3=full debug) */
-#define SHOW_DEBUG 3
+#define SHOW_DEBUG 1
 
 /* show messages on stdout? (0=no, 1=yes) */
 #define SHOW_STDOUT 1

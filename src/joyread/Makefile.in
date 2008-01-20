@@ -52,9 +52,9 @@ distclean:	clean
 # -----
 #
 
-joyreadbutton.o:	joyread.c
-	$(CC) $(CFLAGS) -DCHECK_BUTTON -c -o joyreadbutton.o joyread.c
+joyreadbutton:	joyread.c
+	$(CC) $(CFLAGS) -DCHECK_BUTTON -o joyreadbutton joyread.c
 
-joyreadaxis.o:		joyread.c
-	$(CC) $(CFLAGS) -DCHECK_AXIS -c -o joyreadaxis.o joyread.c
+joyreadaxis:	joyread.c
+	$(CC) $(CFLAGS) -DCHECK_AXIS -o joyreadaxis joyread.c
 

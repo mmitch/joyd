@@ -9,3 +9,18 @@ Hinweis auf Linux Magazin-Artikel
 Erfinder der configuration files in thanks-section aufnehmen
 
 homepage links ==> cgarbs.de
+
+BSD joystick code should be compatible with 'old' Linux joystick
+driver, add some code to make this work (e.g. use BSD joystick
+handling code, but include <system/joystick.h>)
+
+Moreover, make from OpenBSD is not the GNU make. You need to add two
+implicits rules: 
+joyreadbutton: joyreadbutton.o
+joyreadaxis: joyreadaxis.o
+
+beg for postcards :-)
+
+Vincent Bernat <bernat@free.fr> ==> THANKS section
+
+include CVS $Id$ tags into all source files

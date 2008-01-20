@@ -76,7 +76,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#if defined(_BSD_CODE_)
 #include <string.h>
 #endif
 
@@ -92,6 +92,13 @@
  * now to the functions
  */
 
+#if defined(_BSD_CODE_)
+#define PARSE_JOYSTICK_EVENT ParseJoystickEvent_BSD
+#elif defined(_LINUX_CODE_)
+#define PARSE_JOYSTICK_EVENT ParseJoystickEvent_Linux
+#else
+#error Dont know what to do!
+#endif
 
 
 
@@ -106,18 +113,20 @@ void OpenJoystick()
 		exit(1);
 	}
 
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#if defined(_BSD_CODE_)
 	/* BSD does not support different joysticks, there are always
 	   2 axes and 2 buttons */
 	config.version = 1;
 	config.axes    = 2;
 	config.buttons = 2;
 	strcpy(config.joy_name,"Standard BSD Joystick");
-#else
+#elif defined (_LINUX_CODE_)
 	ioctl(config.fd, JSIOCGVERSION, &config.version);
 	ioctl(config.fd, JSIOCGAXES, &config.axes);
 	ioctl(config.fd, JSIOCGBUTTONS, &config.buttons);
 	ioctl(config.fd, JSIOCGNAME(NAME_LENGTH), config.joy_name);
+#else
+#error Could not determine which OS dependent code to use!
 #endif
 
 	if (config.debug > 1) {
@@ -151,7 +160,7 @@ struct js_event WaitForJoystickEvent()
 		exit (1);
 	}
 
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#if defined(_BSD_CODE_)
 	/* On BSD the previous read() is non-blocking. We don't
 	   want to consume 100% CPU time so we wait a bit until the
 	   next read */
@@ -205,27 +214,27 @@ void ExecuteCommands(char type, unsigned int value, char action, unsigned long b
 }
 
 
-void ParseJoystickEvent(struct js_event js, long int *const axis_status, long int *const button_status)
-/* Store a joystick event */
+#ifdef _BSD_CODE_
+void ParseJoystickEvent_BSD(struct js_event js, long int *const axis_status, long int *const button_status)
+/* Store a joystick event  */
 {
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
-
-	/* BSD event handling */
-
 	int js_number;
 	int js_value;
    
-	/* With BSD model of event, many buttons can be pressed at the
-	   same time */
+	/* With BSD model of event, many buttons can be pressed at the same
+	   time. So we use axis_status and button_status to save the 'old'
+	   status. After each read() we check if something has changed (for
+	   example button 1 bit in button_status != button 1 bit in js) and
+	   pass this change to ExecuteCommands() */
 
 	/* check button 0 */
 	js_number = 0;
-	if (((unsigned long) js.b1 ^ (unsigned long) button_status) & (1 << js_number)) {
+	if ((((unsigned long) js.b1 << js_number) ^ (unsigned long) *button_status) & (1 << js_number)) {
 		js_value = js.b1;
 		/* first mask the button bit out */
-		*button_status=(~((unsigned long) (1 << js_number))) & *button_status;
+		*button_status &= (~((unsigned long) (1 << js_number)));
 		/* then add the button status */
-		*button_status=*button_status | ((unsigned long) (js_value <<js_number));
+		*button_status |= ((unsigned long) (js_value << js_number));
 
 		/* check for commands to be executed */
 		ExecuteCommands('B', js_number, (js_value) ? '+' : '-', *button_status, *axis_status);
@@ -233,12 +242,12 @@ void ParseJoystickEvent(struct js_event js, long int *const axis_status, long in
 
 	/* check button 1 */
 	js_number = 1;
-	if (((unsigned long) js.b2 ^ (unsigned long) button_status) & (1 << js_number)) {
+	if ((((unsigned long) js.b2 << js_number) ^ (unsigned long) *button_status) & (1 << js_number)) {
 		js_value = js.b2;
 		/* first mask the button bit out */
-		*button_status=(~((unsigned long) (1 << js_number))) & *button_status;
+		*button_status &= (~((unsigned long) (1 << js_number)));
 		/* then add the button status */
-		*button_status=*button_status | ((unsigned long) (js_value <<js_number));
+		*button_status |= ((unsigned long) (js_value <<js_number));
 
 		/* check for commands to be executed */
 		ExecuteCommands('B', js_number, (js_value) ? '+' : '-', *button_status, *axis_status);
@@ -246,74 +255,79 @@ void ParseJoystickEvent(struct js_event js, long int *const axis_status, long in
 
 	/* check movement on X axis */
 	js_number = 0;
-	if ((js.x <= config.cal[js_number].min) && ((1 << (js_number*2)) & *axis_status) == 0) {
-		/* Movement to the left */
-		*axis_status = *axis_status | (1 << (js_number*2));
-		*axis_status=(~((unsigned long) (1 << js_number*2+1))) & *axis_status;
-		ExecuteCommands('A', js_number*2, '+', *button_status, *axis_status);
-	} else if ((js.x >= config.cal[js_number].max) && ((1 << (js_number*2+1)) & *axis_status) == 0) {
-		/* Movement to the right */
-		*axis_status = *axis_status | (1 << (js_number*2+1));
-		*axis_status=(~((unsigned long) (1 << js_number*2))) & *axis_status;
-		ExecuteCommands('A', js_number*2+1, '+', *button_status, *axis_status);
-	} else if ((1 << (js_number*2)) & *axis_status) {
-		/* Joystick centered (coming back from left) */
-		*axis_status=(~((unsigned long) (1 << js_number*2))) & *axis_status;
-		*axis_status=(~((unsigned long) (1 << js_number*2+1))) & *axis_status;
-		ExecuteCommands('A', js_number*2, '-', *button_status, *axis_status);
-	} else if ((1 << (js_number*2+1)) & *axis_status) {
-		/* Joystick centered (coming back from right) */
-		*axis_status=(~((unsigned long) (1 << js_number*2))) & *axis_status;
-		*axis_status=(~((unsigned long) (1 << js_number*2+1))) & *axis_status;
-		ExecuteCommands('A', js_number*2+1, '-', *button_status, *axis_status);
-	} else {
+	if (((js.x <= config.cal[js_number].min) << (js_number*2)) ^ (( 1 << (js_number*2)) & *axis_status))
+		/* Movement from/to the left */
+	{
+		js_value = (js.x <= config.cal[js_number].min);
+		/* clear both bits */
+		*axis_status &= (~((unsigned long) (3 << (js_number*2))));
+		/* set the left bit */
+		*axis_status |= (js_value << (js_number*2));
+		ExecuteCommands('A', js_number*2, js_value ? '+' : '-' , *button_status, *axis_status);
+	}
+	else if (((js.x >= config.cal[js_number].max) << (js_number*2+1)) ^ (( 1 << (js_number*2+1)) & *axis_status))
+		/* Movement from/to the right */
+	{
+		js_value = (js.x >= config.cal[js_number].max);
+		/* clear both bits */
+		*axis_status &= (~((unsigned long) (3 << (js_number*2))));
+		/* set the right bit */
+		*axis_status |= (js_value << (js_number*2+1));
+		ExecuteCommands('A', js_number*2+1, js_value ? '+' : '-' , *button_status, *axis_status);
+	} 
+	else
 		/* No changes on X axis */
+	{
 	}
     
 	/* check movement on Y axis */
 	js_number = 1;
-	if ((js.y <= config.cal[js_number].min) && ((1 << (js_number*2)) & *axis_status) == 0) {
-		/* Movement to the top */
-		/* set high bit, unset low bit */
-		*axis_status = *axis_status | (1 << (js_number*2+1));
-		*axis_status=(~((unsigned long) (1 << js_number*2))) & *axis_status;
-		ExecuteCommands('A', js_number*2+1, '-', *button_status, *axis_status);
-	} else if ((js.x >= config.cal[js_number].max) && ((1 << (js_number*2+1)) & *axis_status) == 0) {
-		/* Movement to the bottom */
-		/* set low bit, unset high bit */
-		*axis_status = *axis_status | (1 << (js_number*2));
-		*axis_status=(~((unsigned long) (1 << js_number*2+1))) & *axis_status;
-		ExecuteCommands('A', js_number*2, '+', *button_status, *axis_status);
-	} else if ((1 << (js_number*2)) & *axis_status) {
-		/* Joystick centered (coming back from bottom) */
-		/* unset low+high bit */
-		*axis_status=(~((unsigned long) (1 << js_number*2))) & *axis_status;
-		*axis_status=(~((unsigned long) (1 << js_number*2+1))) & *axis_status;
-		ExecuteCommands('A', js_number*2, '-', *button_status, *axis_status);
-	} else if ((1 << (js_number*2+1)) & *axis_status) {
-		/* Joystick centered (coming back from top) */
-		/* unset low+high bit: */
-		*axis_status=(~((unsigned long) (1 << js_number*2))) & *axis_status;
-		*axis_status=(~((unsigned long) (1 << js_number*2+1))) & *axis_status;
-		ExecuteCommands('A', js_number*2+1, '-', *button_status, *axis_status);
-	} else {
-		/* No changes on Y axis */
+	if (((js.y >= config.cal[js_number].max) << (js_number*2)) ^ (( 1 << (js_number*2)) & *axis_status))
+		/* Movement from/to the top */
+	{
+		js_value = (js.y >= config.cal[js_number].max);
+		/* clear both bits */
+		*axis_status &= (~((unsigned long) (3 << (js_number*2))));
+		/* set the left bit */
+		*axis_status |= (js_value << (js_number*2));
+		ExecuteCommands('A', js_number*2, js_value ? '+' : '-' , *button_status, *axis_status);
 	}
-    
-#else
+	else if (((js.y <= config.cal[js_number].min) << (js_number*2+1)) ^ (( 1 << (js_number*2+1)) & *axis_status))
+		/* Movement from/to the bottom */
+	{
+		js_value = (js.y <= config.cal[js_number].min);
+		/* clear both bits */
+		*axis_status &= (~((unsigned long) (3 << (js_number*2))));
+		/* set the right bit */
+		*axis_status |= (js_value << (js_number*2+1));
+		ExecuteCommands('A', js_number*2+1, js_value ? '+' : '-' , *button_status, *axis_status);
+	} 
+	else
+		/* No changes on X axis */
+	{
+	}
+}
+#endif
 
+
+#ifdef _LINUX_CODE_
+void ParseJoystickEvent_Linux(struct js_event js, long int *const axis_status, long int *const button_status)
+/* Store a joystick event  */
+{
 	unsigned long axis_status_old;
-	char buffer[256];
-
-	/* Linux event handling */
+  
+	/* Linux event model generates a single event for everything that
+	   happens with the joystick. These events can be passed directly to
+	   ExecuteCommands(). The current status is also stored in
+	   axis_status and button_status. */
 
 	switch(js.type & ~JS_EVENT_INIT) {
 	case JS_EVENT_BUTTON:
 
 		/* first mask the button bit out */
-		*button_status=(~((unsigned long) (1 << js.number))) & *button_status;
+		*button_status &= (~((unsigned long) (1 << js.number)));
 		/* then add the button status */
-		*button_status=*button_status | ((unsigned long) (js.value <<js.number));
+		*button_status |= ((unsigned long) (js.value <<js.number));
 
 		/* check for commands to be executed */
 		ExecuteCommands('B', js.number, (js.value <<js.number) ? '+' : '-', *button_status, *axis_status);
@@ -325,32 +339,31 @@ void ParseJoystickEvent(struct js_event js, long int *const axis_status, long in
 		/* remember the old status */
 		axis_status_old = * axis_status;
 		/* first mask both axis bits out */
-		*axis_status=(~((unsigned long) (1 << (js.number*2)))) & *axis_status;
-		*axis_status=(~((unsigned long) (1 << ((js.number*2)+1)))) & *axis_status;
+		*axis_status &= (~((unsigned long) (3 << (js.number*2))));
 		/* now see whether its a high or a low value and set the bits */
 		if (js.value <= config.cal[js.number].min) {
 			/* low value, low bit */
-			*axis_status=*axis_status | ((unsigned long) (1 << (js.number*2)));
+			*axis_status |= ((unsigned long) (1 << (js.number*2)));
 		}
 		if (js.value >= config.cal[js.number].max) {
 			/* high value, high bit */
-			*axis_status=*axis_status | ((unsigned long) (1 << ((js.number*2+1))));
+			*axis_status |= ((unsigned long) (1 << ((js.number*2)+1)));
 		}
 
 		/* find out what has changed and execute the corresponding command(s) */
 		if ((*axis_status ^ axis_status_old) & (1 << (js.number*2))) {
 			/* the low bit has changed */
-			ExecuteCommands('A', js.number*2, (*axis_status & (1 <<js.number*2)) ? '+' : '-', *button_status, *axis_status);
+			ExecuteCommands('A', js.number*2, (*axis_status & (1 <<(js.number*2))) ? '+' : '-', *button_status, *axis_status);
 		}
 		if ((*axis_status ^ axis_status_old) & (1 << (js.number*2+1))) {
 			/* the high bit has changed */
-			ExecuteCommands('A', js.number*2+1, (*axis_status & (1 <<js.number*2+1)) ? '+' : '-', *button_status, *axis_status);
+			ExecuteCommands('A', js.number*2+1, (*axis_status & (1 << ((js.number*2)+1))) ? '+' : '-', *button_status, *axis_status);
 		}
 
 		break;
 	}
-#endif
 }
+#endif
 
 	
 void ActionLoop()
@@ -367,7 +380,7 @@ void ActionLoop()
 
 		js = WaitForJoystickEvent();
 
-		ParseJoystickEvent(js, &axis_status, &button_status);
+		PARSE_JOYSTICK_EVENT(js, &axis_status, &button_status);
 
 		if (config.debug > 2) {
 			sprintf(buffer, "axes=%li buttons=%li", axis_status, button_status);

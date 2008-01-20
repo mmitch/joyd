@@ -1,5 +1,30 @@
 
-2001-01-04
+
+   2001-01-10  v0.3.1
+
+
+- complete rewrite of the BSD joystick routines
+- joyreadaxis and joyreadbutton might work on BSD mow
+
+Again, the BSD code is mostly untested by now. Feedback is definitely
+welcome.
+
+The Linux code seems to work quite well: I run the v0.3.0 version
+several hours a day to control my mp3 collection via joypad without
+any problems.
+
+The 0.3.x versions look for a configuration file "~/.joydrc" instead
+of "./joydrc". Be sure to specify a configuration file with the new
+event model when you start joyd:
+
+  joyd examples/joydrc.NEW
+
+
+=======================================================================
+
+
+   2001-01-04  v0.3.0
+
 
 This is a development release, so the new features are not documented
 very good yet. In fact, most of the documentation (especially in the
@@ -26,3 +51,7 @@ BSD. The result is that I've totally messed up the fine BSD work of
 Vincent - I don't think it will run out of the box any more. But
 that's just fine because the main purpose of this release is to ask
 him if the BSD port still works ;-)
+
+
+=======================================================================
+$Id: README.dev,v 1.4 2001/01/10 13:47:52 mitch Exp $

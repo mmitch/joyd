@@ -1,7 +1,7 @@
 #ifndef PARSE_HOME_INCLUDED
 
 /*
-// $Id: parse_home.h,v 1.2 1999/06/26 17:50:00 mitch Exp mitch $
+// $Id: parse_home.h,v 1.2 2001/01/08 19:01:18 mitch Exp $
 //
 // 1999 (C) by Christian Garbs <mitch@uni.de>
 // This file is licensed under GNU GPL.
@@ -38,20 +38,10 @@
 /*
 //
 // ------------------------------------------------
-//
-// $Log: parse_home.h,v $
-// Revision 1.2  1999/06/26 17:50:00  mitch
-// - all the comments are now in English instead of German
-// - easy way to change the bevaviour in case of unset $HOME
-// - #defined PARSE_HOME_INCLUDED to avoid multiple includes
-//
-// Revision 1.1  1999/06/26 17:25:48  mitch
-// Initial revision
-//
-// ------------------------------------------------
 */
 
 #include <stdio.h>
+#include <string.h>
 
 char *parse_home(char *pch_old)
 

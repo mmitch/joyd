@@ -226,9 +226,9 @@ void AddAction(char type, unsigned int value, char action, unsigned int buttons_
 
 	if (config.debug > 1) {
 		if (type == 'B') {
-			sprintf(buffer,"%c button %li (%li %li %li %li) bound to ",action, value, buttons_yes, buttons_no, axes_yes, axes_no);
+			sprintf(buffer,"%c button %i (%i %i %i %i) bound to ",action, value, buttons_yes, buttons_no, axes_yes, axes_no);
 		} else {
-			sprintf(buffer,"%c axis %li (%li %li %li %li) bound to ",action, value, buttons_yes, buttons_no, axes_yes, axes_no);
+			sprintf(buffer,"%c axis %i (%i %i %i %i) bound to ",action, value, buttons_yes, buttons_no, axes_yes, axes_no);
 		}
 		Print(stdout,buffer,command);
 	}

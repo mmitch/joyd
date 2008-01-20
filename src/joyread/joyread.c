@@ -68,7 +68,40 @@
 #include <errno.h>
 #include <string.h>
 
+
+/* machine dependent includes */
+
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+
+/* BSD */
+#include <machine/joystick.h>
+#define js_event joystick
+#define _BSD_CODE_
+
+
+#elif defined(__FakeBSDonLinuxForCompileTest__)
+
+/* BSD on Linux (debugging only) */
+#warning building BSD on Linux: this will not work!
 #include <linux/joystick.h>
+struct joystick {
+	int x, y, b1, b2;
+};
+#define _BSD_CODE_
+
+
+#else
+
+/* Linux */
+#include <linux/joystick.h>
+#define _LINUX_CODE_
+
+
+#endif
+
+/* end of machine dependent includes */
+
+
 
 #define NAME_LENGTH 128
 
@@ -95,20 +128,22 @@
 #define PROGRAM_NAME "joyreadbutton"
 #else
 /* !axis && !button */
-#error You must either set -DCHECK_AXIS or -DCHECK_BUTTON
+#error You must set either -DCHECK_AXIS or -DCHECK_BUTTON
 #endif
 #endif
 
 
 int main (int argc, char **argv)
 {
-	int fd;
+
+#if defined(_LINUX_CODE_)
 	unsigned char axes;
 	unsigned char buttons;
-
-	int found_something = 0;
-
 	int i;
+#endif
+
+	int fd;
+	int found_something = 0;
 	struct js_event js;
 
 	if (argc != 3 )
@@ -123,18 +158,55 @@ int main (int argc, char **argv)
 		exit(1);
 	}
 
-#ifdef __OpenBSD__
-        /* OpenBSD does not support different joysticks, there are
-           always 2 axes and 2 buttons */
-        axes    = 2;
-        buttons = 2;
+#if defined(_BSD_CODE_)
+
+	/* BSD part */
+
+#ifdef CHECK_BUTTON
+#define CHECK_0 b1
+#define CHECK_1 b2
 #else
-        ioctl(fd, JSIOCGAXES, &axes);
-        ioctl(fd, JSIOCGBUTTONS, &buttons);
+#define CHECK_0 x
+#define CHECK_1 y
 #endif
+
+	if (read(fd, &js, sizeof(struct js_event)) != sizeof(struct js_event))
+	{
+		perror("\n"PROGRAM_NAME": error reading");
+		exit (1);
+	}
+
+
+	switch (atoi(argv[2])) {
+	case 0:
+		printf("%d\n", js.CHECK_0);
+		found_something = 1;
+		break;
+	case 1:
+		printf("%d\n", js.CHECK_1);
+		found_something = 1;
+		break;
+	default:
+		found_something = 0;
+	}
+
+
+	  
+#elif defined(_LINUX_CODE_)
+
+	/* Linux part */
+
+#ifdef CHECK_BUTTON
+#define JS_EVENT_TO_CHECK JS_EVENT_BUTTON
+#else
+#define JS_EVENT_TO_CHECK JS_EVENT_AXIS
+#endif
+
+	ioctl(fd, JSIOCGAXES, &axes);
+	ioctl(fd, JSIOCGBUTTONS, &buttons);
 	
 	/* Just read the JS_EVENT_INIT events to see what the current
-           state of the joystick is, then exit */
+	   state of the joystick is, then exit */
 
 	for (i=0;i<axes+buttons;i++)
 	{
@@ -144,11 +216,7 @@ int main (int argc, char **argv)
 			exit (1);
 		}
 		
-#ifdef CHECK_BUTTON
-		if ((js.type & ~JS_EVENT_INIT) == JS_EVENT_BUTTON)
-#else
-		if ((js.type & ~JS_EVENT_INIT) == JS_EVENT_AXIS)
-#endif
+		if ((js.type & ~JS_EVENT_INIT) == JS_EVENT_TO_CHECK)
 		{
 			if (js.number == atoi(argv[2]))
 			{
@@ -157,6 +225,14 @@ int main (int argc, char **argv)
 			}
 		}
 	}
+
+
+	
+#else
+
+#error Could not determine which OS dependent code to use!
+
+#endif
 	
 	if (close(fd))
 	{
