@@ -2,16 +2,17 @@ Begin3
 
 Title:		joyd
 
-Version:	0.0.4
+Version:	0.0.5
 
-Entered-date:	09FEB00
+Entered-date:	19MAR00
 
 Description:	A very flexible program that allows you to execute
 		commands by a joystick or joypad attached to your
 		computer, i.e. it is possible to reboot when your
-		keyboard is hung.
+		keyboard is hung. Helper applications allow you to
+		test the joystick status in your own shell scripts.
 
-Keywords:	joystick, start, execute, launch, reboot
+Keywords:	joystick, start, execute, launch, reboot, status
 
 Author:		mitch@uni.de (Christian Garbs)
 
@@ -20,7 +21,7 @@ Maintained-by:	mitch@uni.de (Christian Garbs)
 Primary-site:	http://www.h.shuttle.de/mitch/joyd.en.html
 
 Alternate-site:	MetaLab.unc.edu /pub/Linux/hardware/daemons
-		22k joyd-0.0.4.tar.gz
+		26k joyd-0.0.5.tar.gz
 
 Platforms:	any input device supported by the Linux Joystick
 		driver

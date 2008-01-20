@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.4   ---   The Joystick Daemon
+ *    joyd 0.0.5   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -41,8 +41,14 @@
  */
 
 /*  joyd 0.0.4 2000-02-09
+ *  joyd 0.0.5 2000-03-19
  *
  *  (no changes)
+ */
+
+/*  joyd 0.0.5 2000-xx-xx
+ *
+ *  - axis values are compared with "<=" and ">=" instead of "<" and ">"
  */
 
 
@@ -187,11 +193,11 @@ void StoreJoystickEvent(struct js_event js,long int *const axis_normal,long int 
 		*axis_normal=(~((unsigned long) (1 << (js.number*2)))) & *axis_normal;
 		*axis_normal=(~((unsigned long) (1 << ((js.number*2)+1)))) & *axis_normal;
 		/* now see whether its a high or a low value and set the bits */
-		if (js.value < config.cal[js.number].min) {
+		if (js.value <= config.cal[js.number].min) {
 			/* low value, low bit */
 			*axis_normal=*axis_normal | ((unsigned long) (1 << (js.number*2)));
 		}
-		if (js.value > config.cal[js.number].max) {
+		if (js.value >= config.cal[js.number].max) {
 			/* high value, high bit */
 			*axis_normal=*axis_normal | ((unsigned long) (1 << ((js.number*2+1))));
 		}

@@ -1,22 +1,5 @@
-    =============================================================
-   :                                                             :
-   : Please send a short mail to <mitch@uni.de>                  :
-   :                                                             :
-   : I'd like to know if you had any problems with joyd, if the  :
-   : manual is too complicated or if it just works the way it    :
-   : should.                                                     :
-   :                                                             :
-   : The calibration code is still untested because I don't have :
-   : an analog device. So you have to tell me if it works the    :
-   : way it is supposed to.                                      :
-   :                                                             :
-   : Thank you!                                                  :
-   :                                                             :
-    =============================================================
-   
 
-
-	joyd 0.0.4   ---   The Joystick Daemon  (2000-02-09)
+	joyd 0.0.5   ---   The Joystick Daemon  (2000-03-19)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -132,6 +115,10 @@ defaults. There are some example configuration files within this archive
 
 For example, use the "joydrc" example configuration file to find out
 the numbers of your axes and buttons by typing "joyd joydrc".
+
+If you don't want to guess the numbers of your axes and buttons then
+have a look at the file CONFIG. Perhaps your joystick is already
+listed there.
 
 In joyd, every movement of your stick and every button corresponds to
 a number. It works like this:
@@ -256,11 +243,32 @@ commands are then executed in the order they appear in the
 configuration file.
 
 
+  TOOLS
+  ~~~~~
+
+If you need to know what the current status of your joystick is, you
+can use the tools "joyreadbutton" and "joyreadaxis". Start them with
+your device and the axis/button to read as parameters. The current
+state of your joystick will then be printed to stdout.
+
+Example:
+
+$ # Button 0 not pressed:
+$ joyreadbutton /dev/js1 0
+0
+$ # Button 0 pressed:
+$ joyreadbutton /dev/js1 0
+1
+
+
   THANKS
   ~~~~~~
 
 Florian Paetz <fpaetz@gmx.de> for some suggestions on good C coding
 style and finding the "external" bug in v0.0.1
+
+Derrick Pallas <omegakon@bigfoot.com> for reporting and fixing the
+problems with joysticks which report buttons as axes in v0.0.5
 
 
   CONTACT
@@ -273,11 +281,16 @@ somewhere in the subject line.
 An up-to-date version of this program can be found on my homepage at
 http://www.h.shuttle.de/mitch/joyd.en.html
 
+If you prefer German to English, then try this address:
+http://www.h.shuttle.de/mitch/joyd.de.html
+
 joyd should also be available from MetaLab.unc.edu in the directory
 /pub/Linux/hardware/daemons.
 
+joyd is also listed on freshmeat:
+http://www.freshmeat.net/appindex/2000/01/11/947625771.html
 
 
 				________________________________
 				I hope that you find this useful
-				Christian, 2000-02-09
+				Christian

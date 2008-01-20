@@ -1,0 +1,156 @@
+(written by: Derrick Pallas <omegakon@bigfoot.com>)
+
+I'm using a Microsoft Sidewinder Force Feedback Pro. It's fairly
+complicated as far as describing it goes. The stick part of the
+joystick (looking down) looks like this:
+
+Compass
+  _____
+ /_(_) \
+|| |   @| Top
+ \\_\ @/  Bottom
+  \___/
+Long
+
+Something like that. The (_) is what I called the Compass. It can be
+pushed North/South and East/West, and is not a button, but an
+axis. The button on the left side is long, so I called it Long. The
+two on the left are called Top and Bottom. There is also a Trigger on
+the underside - it's pretty easy to find. There are five more buttons
+on the device, all on the base: a shift, which is near the user (and
+marked with an arrow) and four lettered buttons - A, B, C, and D - in
+the upper left.
+
+(C)(B)
+ (D)(A)
+
+Axis 1 is Left(low: 0)/Right(high: 1023).
+
+Axis 2 is Up(low: 0)/Down(high: 1023).
+
+Axis 3 is a dial on the side of the device. There are a series of dots
+next to it that get bigger as you turn the dial clockwise. I marked that
+end Big(low: 0) and a full counterclockwise turn Small(high: 127), so as
+not to confuse myself with the Z-Axis. It goes from 0 to 127. I sugest
+that Sidewinder users turn this off by setting the limits to -1:128. It
+is fairly easy to leave the stupid thing in a high/low set position,
+which keeps joyd from doing anything at all. It can't be used as a dial.
+
+Axis 4 is the Z axis: Counterclockwise(low: 0)/Clockwise(high: 63)
+looking down on the device.
+
+Axis 5 is the Compass: West(low: -1)/East(high: 1). It is digital.
+
+Axis 6 is the Compass: North(low: -1)/South(high: 1).
+
+One of the neat things you can do with the compass is get more than the
+cardinal directions:
+
+1536	0	true	#	North-East
+1280	0	true	#	North-West
+2560	0	true	#	South-East
+2304	0	true	#	South-West
+3840	0	true	#	Compass-Loop
+
+It takes a little getting used to, but it's fun. The compass loop is
+really interesting, except there is no way to tell which direction you
+went it. But it's still something fun to do, and adds an extra
+sequence to what you can do.
+
+The buttons are as follows:
+#1: Trigger
+#2: Long
+#3: Top
+#4: Bottom
+#5: A
+#6: B
+#7: C
+#8: D
+#9: Shift
+
+This is my joydrc base file:
+
+# Joystick Daemon configuration
+# MP3 - Microsoft SideWinder ForceFeedback Pro
+
+[general]
+device  /dev/js0
+daemon  0
+debug   2
+stdout  1
+syslog  1
+reread  REREAD
+exit    EXIT
+shift   256
+#calmin -1
+#calmax 1
+
+[calibration]
+127     995     # 0     1024
+127     995     # 0     1024
+7       119     # 0     127
+15      47      # 0     63
+-1      1       # -1    1
+-1      1       # -1    1
+
+[actions]
+#0      1       true    # Trigger
+#0      2       true    # Long
+#0      4       true    # Top
+#0      8       true    # Bottom
+#0      16      true    # A
+#0      32      true    # B
+#0      64      true    # C
+#0      128     true    # D
+##0     256     true    # Shift
+#0      257     true    # Shift-Trigger
+#0      258     true    # Shift-Long
+#0      260     true    # Shift-Top
+#0      264     true    # Shift-Bottom
+#0      272     true    # Shift-A
+#0      288     true    # Shift-B
+#0      320     true    # Shift-C
+#0      384     true    # Shift-D
+
+
+#1      0       true    # 1L    Left
+#2      0       true    # 1H    Right
+#4      0       true    # 2L    Up
+#8      0       true    # 2H    Down
+#16     0       true    # 3L    Big
+#32     0       true    # 3H    Small
+#64     0       true    # 4L    Counter
+#128    0       true    # 4H    Clock
+#256    0       true    # 5L    West
+#512    0       true    # 5H    East
+#1024   0       true    # 6L    North
+#2048   0       true    # 6H    South
+
+#1536   0       true    #       North-East
+#1280   0       true    #       North-West
+#2560   0       true    #       South-East
+#2304   0       true    #       South-West
+
+#3840   0       true    #       Compass-Loop
+
+
+#1      256     true    # 1L    Shift-Left
+#2      256     true    # 1H    Shift-Right
+#4      256     true    # 2L    Shift-Up
+#8      256     true    # 2H    Shift-Down
+#16     256     true    # 3L    Shift-Big
+#32     256     true    # 3H    Shift-Small
+:
+#64     256     true    # 4L    Shift-Counter
+#128    256     true    # 4H    Shift-Clock
+#256    256     true    # 5L    Shift-West
+#512    256     true    # 5H    Shift-East
+#1024   256     true    # 6L    Shift-North
+#2048   256     true    # 6H    Shift-South
+
+#1536   256     true    #       Shift-North-East
+#1280   256     true    #       Shift-North-West
+#2560   256     true    #       Shift-South-East
+#2304   256     true    #       Shift-South-West
+
+#3840   256     true    #       Shift-Compass-Loop

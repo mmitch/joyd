@@ -1,0 +1,72 @@
+#############################################################################
+#
+# If your joystick is listed in here, you don't have to try to find
+# the correct numbers for your axes/buttons.
+#
+# If you want to contribute the settings for your joystick to this
+# list, please mail them to <mitch@uni.de>. You can use this template:
+# 
+
+   example entry for analog device
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+added by Your Name <your@email>
+
+Action            | Event            | Values ([a]nalog / [d]igital)
+------------------+------------------+---------------------------------------
+Left                Axis 1 low         [a] 0 to -32767
+
+#
+#############################################################################
+
+
+  T A B L E   O F   C O N T E N T S
+  =================================
+
+
+  As of joyd version 0.0.5 you will find info on these joysticks:
+
+    - Microsoft Sidewinder Force Feedback Pro
+    - Super Nintento Joypad
+
+
+
+#############################################################################
+
+
+   Microsoft Sidewinder Force Feedback Pro
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+added by Derrick Pallas <omegakon@bigfoot.com>
+
+This description is quite long and won't fit into the template.
+Please read the file CONFIG.SidewinderFFP
+
+
+#############################################################################
+
+
+   Super Nintendo Joypad
+   ~~~~~~~~~~~~~~~~~~~~~
+
+added by Christian Garbs <mitch@uni.de>
+
+(on parallel port, see /usr/src/linux/Documentation/joystick-parport.txt)
+
+Action            | Event            | Values ([a]nalog / [d]igital)
+------------------+------------------+----------------------------------------
+Left                Axis 1 low         [d] -32767
+Right               Axis 1 high        [d]  32767
+Up                  Axis 2 low         [d] -32767
+Down                Axis 2 high        [d]  32767
+Button "A"          Button 1
+Button "B"          Button 2
+Button "X"          Button 3
+Button "Y"          Button 4
+Button "L"          Button 5
+Button "R"          Button 6
+Button "Select"     Button 7
+Button "Start"      Button 8
+
+
+#############################################################################
