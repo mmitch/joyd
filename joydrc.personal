@@ -1,0 +1,60 @@
+#
+# personal joyd configuration
+# of <mitch@uni.de>
+# as of 2000-01-09
+
+#
+# I use an original SNES joypad connected to my parallel port.
+# These are the available buttons/axes:
+#
+#	left	right	up	down
+#	A	B	X	Y	L	R	Select	Start
+#	1	2	4	8	16	32	64	128
+#
+
+[general]
+# override compiled in defaults:
+debug	0
+stdout	0
+syslog	1
+daemon	1
+
+# L and R buttons work as shift keys
+shift	48
+
+
+[actions]
+# Shutdown
+0	176	/sbin/shutdown -h now
+
+# Mixer volume
+8	0	/usr/bin/aumix -v-3
+4	0	/usr/bin/aumix -v+3
+	
+# Mixer treble
+8	32	/usr/bin/aumix -t-3
+4	32	/usr/bin/aumix -t+3
+	
+# Mixer bass
+8	16	/usr/bin/aumix -b-3
+4	16	/usr/bin/aumix -b+3
+	
+# skip mp3 file
+2	0	/usr/bin/killall mpg123
+2	0	/home/mitch/bin/mp3play &
+
+# start playing mp3
+0	128	/home/mitch/bin/mixer-init.sh
+0	128	/home/mitch/bin/mp3play &
+
+# stop playing mp3
+0	64	/usr/bin/killall mpg123
+
+#
+# /home/mitch/bin/mixer-init.sh
+#   this sets my mixer volumes to reasonable defaults
+#
+# /home/mitch/bin/mp3play
+#   this plays all of my mp3 files, it's a combination
+#   of something like 'find *.mp3', shuffling the list
+#   and passing it to mpg123

@@ -1,0 +1,21 @@
+#
+# sample configuration file for joyd
+#
+
+#
+# This demonstrates the exit function.
+# Use button 1 to exit joyd.
+#
+
+[general]
+# Some general settings
+device	/dev/js0
+daemon	0
+debug	2
+stdout	1
+syslog	0
+exit	$exit$
+
+[actions]
+# Exit when button 1 is pressed
+0	1	$exit$

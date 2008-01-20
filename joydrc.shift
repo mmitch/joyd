@@ -1,0 +1,40 @@
+#
+# sample configuration file for joyd
+#
+
+#
+# This demonstrates the shift function.
+# See the difference between button 1 and button 2 - use them together
+# with axis 1.
+# You can exit joyd by pressing both button 1 and button 2 together.
+#
+
+
+[general]
+# Some general settings
+device	/dev/js0
+daemon	0
+debug	2
+stdout	1
+syslog	0
+calmin	-8000
+calmax	8000
+exit	$exit$
+
+# Here we set Button 1 to shift key mode:
+shift	1
+
+
+[actions]
+# Button 1 is shift key, this won't be executed:
+0	1	/bin/echo Button 1
+
+# These messages will be printed
+0	2	/bin/echo Button 2
+1	1	/bin/echo Button 1 + Axis 1 low
+2	1	/bin/echo Button 1 + Axis 1 high
+1	2	/bin/echo Button 2 + Axis 1 low
+2	2	/bin/echo Button 2 + Axis 1 high
+
+# End when both buttons are pressed
+0	3	$exit$

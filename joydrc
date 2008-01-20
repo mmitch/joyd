@@ -1,0 +1,39 @@
+#
+# sample configuration file for joyd
+#
+# This helps you to find out the numbers of your buttons and axes.
+# Use ctrl-c to quit joyd.
+#
+
+[general]
+# Some general settings
+device 	/dev/js0
+daemon	0
+debug	2
+stdout	1
+syslog	0
+calmin	-8000
+calmax	8000
+
+[actions]
+# These are the buttons that can be pressed
+0	1	/bin/echo Button 1
+0	2	/bin/echo Button 2
+0	4	/bin/echo Button 3
+0	8	/bin/echo Button 4
+0	16	/bin/echo Button 5
+0	32	/bin/echo Button 6
+0	64	/bin/echo Button 7
+0	128	/bin/echo Button 8
+0	256	/bin/echo Button 9
+0	512	/bin/echo Button 10
+
+# These are the axes
+1	0	/bin/echo Axis 1 low value
+2	0	/bin/echo Axis 1 high value
+4	0	/bin/echo Axis 2 low value
+8	0	/bin/echo Axis 2 high value
+16	0	/bin/echo Axis 3 low value
+32	0	/bin/echo Axis 3 high value
+64	0	/bin/echo Axis 4 low value
+128	0	/bin/echo Axis 4 high value

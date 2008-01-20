@@ -1,0 +1,28 @@
+#
+# sample configuration file for joyd
+#
+# This demonstrates the calibration of your (analog) joystick.
+# Left-right axis should be more sensitive than up-down axis.
+# Use ctrl-c to quit joyd.
+#
+
+[general]
+# Some general settings
+device 	/dev/js0
+daemon	0
+debug	2
+stdout	1
+syslog	0
+
+[calibration]
+-500	500
+-12000	12000
+
+[actions]
+
+# These are the axes
+1	0	/bin/echo Left
+2	0	/bin/echo Right
+4	0	/bin/echo Down
+8	0	/bin/echo Up
+

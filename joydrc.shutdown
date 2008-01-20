@@ -1,0 +1,23 @@
+#
+# sample configuration file for joyd
+#
+
+#
+# This is will start joyd in the background.
+# Button 1 will shutdown your computer.
+# (This only works if the user running joyd has the proper rights.)
+#
+
+
+[general]
+# Some general settings
+device	/dev/js0
+daemon	1
+debug	0
+stdout	0
+syslog	1
+
+
+[actions]
+# Button 1 for shutdown:
+0	1	/sbin/shutdown -h now

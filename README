@@ -1,0 +1,237 @@
+
+	joyd 0.0.1   ---   The Joystick Daemon
+
+	2000 (C) by Christian Garbs <mitch@uni.de>
+
+	This is GNU GPL.
+
+
+  FOR THE IMPATIENT
+  ~~~~~~~~~~~~~~~~~
+
+1) Unpack the archive
+
+2) "make", "make install"
+
+3) Start "joyd", use your joystick, watch the screen, exit joyd by
+   pressing ctrl-c
+
+4) Take a look at "joydrc" to see why it has done what it has done
+
+
+  INTRODUCTION
+  ~~~~~~~~~~~~
+
+joyd is a daemon that allows you to trigger commands on your computer
+by using your joystick. It can execute any program.
+
+You can bind commands to single buttons, movements of your stick or
+combinations. There can be as much commands as you like, you can even
+bind multiple commands to one combination.
+
+joyd uses very few resources: when nothing happens at the joystick
+port, it just sleeps, needing no CPU time.
+
+When run in daemon mode, joyd switches to the background. It can
+itself still be controlled by joystick commands or signals (e.g.
+SIGHUP). joyd is also able to log its output to syslog.
+
+
+  INSTALLATION
+  ~~~~~~~~~~~~
+
+First, unpack the .tar.gz-archive.
+
+If you want to change the installation defaults, take a look at
+"joyd.h" and edit it.
+
+Then type "make" to compile the binary. You can install the binary to
+/usr/local/bin/joyd by typing "make install" (you propably need to be
+root to do this).
+
+
+  USING JOYD
+  ~~~~~~~~~~
+
+Start joyd as "joyd". It accepts one command line argument, this is
+where joyd will look for a configuration file. If no configuration
+file is given, joyd will use the compiled in default.
+
+When joyd is started, it will either run in normal mode or in daemon
+(background) mode. This can be set within the configuration file. If
+you want to stop a normal joyd, simply press ctrl-c.
+
+If you want to stop a joyd daemon, you have to look up its PID using
+"ps aux" and then kill it by typing "kill <PID>". If you have only one
+joyd running, you could also say "killall joyd". Note that you can
+also bind the exit command to your joystick.
+
+When joyd is running, you can execute the commands given in the
+configuration file by using your joystick. joyd scans the axes and
+buttons of your joystick. Normally axis 1 is left-right and axis 2 is
+up-down. If your joystick provides more axes then you can also use
+them.
+
+The joystick buttons can be scanned in two modes: normal and
+shift. The normal mode executes a command after one or more buttons
+have been pressed and released. A shift button does not execute a
+command but can modify the behaviour of a normal key. A shift button
+does not have to be released. Look at the configuration file
+"joydrc.shift" for an example of this.
+
+When joyd receives the SIGHUP signal, it will reread its configuration
+file (for example "kill -HUP <PID>", where PID can be found out using
+"ps aux").
+
+
+  CONFIGURATION
+  ~~~~~~~~~~~~~
+
+All configuration is done in the configuration file or in the installation
+defaults. There are some example configuration files within this archive
+(joydrc*) for you to look at and test.
+
+For example, use the "joydrc" example configuration file to find out
+the numbers of your axes and buttons by typing "joyd joydrc".
+
+In joyd, every movement of your stick and every button corresponds to
+a number. It works like this:
+
+  number  movement
+ -----------------------------------------
+     1    axis 1 low  value   (left)
+     2    axis 1 high value   (right)
+     4    axis 2 low  value   (down)
+     8    axis 2 high value   (up)
+    16    axis 3 low  value
+    32    axis 3 high value
+    64    axis 4 low  value
+  [...]
+
+  number  button
+ ---------------------------
+     1     Button 1
+     2     Button 2
+     4     Button 3
+     8     Button 4
+    16     Button 5
+  [...]
+
+To get a combination of two buttons or axes, just add their
+numbers. For example 5 would man buttons 1 and 5 (or left and down,
+respectively).
+
+If you use an analog device, joyd will have to decide when an axis has
+reached it's low or high value. The joystick will give back a value
+between -16384 and 16387 and joyd will compare it to two calibration
+variables. If the value is lower than the minimum calibration then it
+is considered as "low", if the value is higher than the maximum
+calibration then it is considered as "high". By changing these values,
+you can make your joystick act more (or less) sensitively.
+
+
+  CONFIGURATION FILES
+  ~~~~~~~~~~~~~~~~~~~
+
+A configuration file is a plain ascii file. Lines beginning with # are
+treated as comments. Keep in mind that there has to be a line feed
+after the last line.
+
+A configuration file is divided into three sections. The first section
+is started by "[general]". The following variables can be set:
+
+  calmin n
+    The default minimum calibration is set to n.
+
+  calmax n
+    The default maximum calibration is set to n.
+
+  config s
+    This sets the configuration file to s. Only useful when you plan
+    to reread the configuration file.
+
+  daemon b
+    This controls whether joyd will switch to daemon (background) mode
+    (1) or not (0).
+
+  debug  b
+    This sets the verbosity of status messages. 0 means be quiet,
+    1 enables some warnings, 2 shows many status informations and 3 is
+    used for debugging.
+
+  device s
+    This sets the device where the joystick is located to s.
+
+  exit   s
+    This sets the command string that can be used to exit joyd to s.
+
+  reread s
+    This sets the command string to reread the configuration file
+    to n.
+
+  shift  n
+    The button(s) n will be used in shift mode.
+
+  stdout b
+    joyd will show its messages in stdout (1) or not (0).
+
+  syslog b
+    joyd will show its messages in the syslog (1) or not (0).
+
+
+The next section is the "[calibration]" section. It contains lines
+with two numerical arguments: minimum and maximum calibration for each
+axis (the first line corresponds to axis 1, the second to axis 2 and
+so forth).
+
+If your joystick has more axes than there are in this section, the
+other axes will use the calmin and calmax default values.
+
+
+The last section is the "[action]" section. It binds the commands to
+the joystick. The lines are in the format
+
+  a	b	c
+
+Where (a) is the number of the axes and (b) the number of the buttons (see
+above), that should trigger the command. (c) is the command string to
+be executed. The command should have a complete path. I you want to
+execute a command in the background, then start it with "&" (for
+example: "/usr/bin/updatedb &"). When a command is not executed in
+background, joyd will be blockes until the command is finished.
+
+If (c) is the string that you defined as "exit" in the general section,
+joyd will exit when the button/axis condition is true. If (c) is the
+"reread" string, then joyd will reread it's configuration file. See
+the example configuration "joydrc.exit" for this.
+
+Here is an example:
+
+  1	2	/bin/echo Hello
+
+This will print "Hello" when you pull your joystick left (a=1) and
+press your 2nd button (b=2).
+
+You can bind multiple commands to one combination of axes/buttons. The
+commands are then executed in the order they appear in the
+configuration file.
+
+
+  CONTACT
+  ~~~~~~~
+
+If you find a bug, or you have questions, comments or suggestions,
+then mail me at	<mitch@uni.de>. Please include the term "joyd"
+somewhere in the subject line.
+
+An up-to-date version of this program can be found on my homepage at
+http://www.h.shuttle.de/mitch/joyd.en.html
+
+joyd should also be available from MetaLab.unc.edu in the directory
+/pub/Linux/hardware/daemons.
+
+
+
+				________________________________
+				I hope that you find this useful
+				Christian, 2000-01-09
