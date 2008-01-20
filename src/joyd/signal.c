@@ -121,12 +121,12 @@ void SignalHandler(int sig)
 		raise(sig);
 		break;
 	case SIGABRT:
-		Print(stdout,"caught a ABRT signal, exiting...",NOTHING);
+		Print(stdout,"caught an ABRT signal, exiting...",NOTHING);
 		signal(sig,SIG_DFL);
 		raise(sig);
 		break;
 	case SIGINT:
-		Print(stdout,"caught a INT signal, exiting...",NOTHING);
+		Print(stdout,"caught an INT signal, exiting...",NOTHING);
 		signal(sig,SIG_DFL);
 		raise(sig);
 		break;

@@ -1,0 +1,80 @@
+2001-01-04  Christian Garbs [Master Mitch]  <mitch@yggdrasil.mitch.h.shuttle.de>
+
+	* joystick.c: some debugging: at least the Linux code works now
+
+	* signal.c: fixed some typos
+
+	* joyd.h: version changed to 0.3.0
+
+	* options.c: fixed a type (action was always set to '+')
+
+	* joystick.c: - Y axis on BSD was missing
+	- some bug fixes
+
+	* joyd.h: removed the DELTA for BSD
+
+	* joystick.c: - BSD-#ifdefs now include __FreeBSD__ and __NetBSD__
+
+	- changed ExecuteCommands(), ActionLoop() and ParseJoystickEvent() to
+	  the new action model
+
+	- removed StoreJoystickEvent(), StoreButtonBSD() and StoreAxisBSD()
+
+	- removed code for shift keys
+
+	- I've messed up the BSD code quite a bit - it's not been tested this
+	  way yet!
+
+	* options.c, joystick.h, joyd.h, joyd.c: proper indentation
+
+	* options.c:
+	- "~/" in configuration file is expanded to current $HOME directory
+	- shift keys have been removed
+	- AddAction() and ParseActionLine() have been changed to the new
+	  action model
+	- configuration file can be read from stdin
+
+	* options.h: - changed AddAction() to the new action model
+
+	* joystick.h:
+	- expanded #ifdefs with __FreeBSD__ and __NetBSD__ included a
+	- __FakeBSDonLinuxForCompileTest__ #ifdef to check for compiling error
+	  in the BSD code on my Linux system
+	- ExecuteCommands() changed to the new action model
+
+	* joyd.h: - full debug enabled by default
+	- #ifdefs expanded to __FreeBSD__ and __NetBSD__
+	- default configuration file now is "~/.joydrc"
+	- added long command line help option "--help"
+	- added filename that means stdin ("-")
+	- changed the TACTION structure to the new action model
+	- removed shift keys
+
+	* joyd.c: Included long help option '--help' command line argument.
+
+2001-01-02  Christian Garbs [Master Mitch]  <mitch@yggdrasil.mitch.h.shuttle.de>
+
+	* joystick.c, joystick.h, joyd.h:
+	OpenBSD patch from Vincent Bernat <bernat@free.fr> included.
+
+2000-10-11  Christian Garbs [Master Mitch]  <mitch@yggdrasil.mitch.h.shuttle.de>
+
+	* joystick.c, log.c, options.c, signal.c: version tag updated to v0.2.2
+
+	* string.c: fixed a type in a date
+
+	* string.c, daemon.c, string.h, signal.h, options.h, log.h, joystick.h, joyd.h, daemon.h:
+	version tag updated to v0.2.2
+
+	* joyd.c:
+	Fixed bug of not using compiled in default configuration file.
+
+2000-07-04  Christian Garbs [Master Mitch]  <mitch@yggdrasil.mitch.h.shuttle.de>
+
+	* config.h.in, daemon.c, daemon.h, joyd.c, joyd.h, joystick.c, joystick.h, log.c, log.h, Makefile.in, options.c, options.h, signal.c, signal.h, string.c, string.h:
+
+	CVS source import from joyd-0.2.1.tar.gz
+
+	* config.h.in, daemon.c, daemon.h, joyd.c, joyd.h, joystick.c, joystick.h, log.c, log.h, Makefile.in, options.c, options.h, signal.c, signal.h, string.c, string.h:
+	New file.
+

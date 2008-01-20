@@ -1,0 +1,67 @@
+#
+# sample configuration file for joyd
+#
+# This helps you to find out the numbers of your buttons and axes.
+# Use ctrl-c to quit joyd.
+#
+
+[general]
+# Some general settings
+device 	/dev/js0
+daemon	0
+debug	3
+stdout	1
+syslog	0
+calmin	-16384
+calmax	16383
+
+# - Brief explanation of the new [action] lines:
+# <type> <number> <value> 0 0 0 0 <command>
+# 
+# type....: 'A' -> axis, 'B' -> button
+# number..: number of the axis or button (just a SINGLE button/axis,
+#                                         NO combinations like in v0.2.2) 
+# value...: '+' -> pressed/activated, '-' -> released/deactivated
+# command.: command to execute
+
+# - Examples:
+# A 1 +  ==>  axis 1(low) activated  ==>  when joystick is moved to the left
+# B 2 -  ==>  button 2 released      ==>  self-explanatory :-)
+
+# - And what does '0 0 0 0' mean?
+# These 4 numbers are named 'required buttons', 'not allowed buttons',
+# 'required axes' and 'not alowed axes'. The values can hold
+# combinations of different buttons/axes, just add them.
+
+# - Examples:
+# A 1 + 0 1 0 0 ==> button 1 not allowed
+#               ==> execute command WHEN joystick is moved to the left
+#                                   AND  button 1 is not pressed
+# B 2 - 1 0 0 0 ==> button 1 required
+#               ==> execute command WHEN button 2 is released
+#                                   AND  button 1 is still pressed
+
+[actions]
+# These are the buttons that can be pressed
+B   1 + 0 0 0 0 /bin/echo Button 1 pressed
+B   1 - 0 0 0 0 /bin/echo Button 1 released
+B   2 + 0 0 0 0 /bin/echo Button 2
+B   4 + 0 0 0 0 /bin/echo Button 3
+B   8 + 0 0 0 0 /bin/echo Button 4
+B  16 + 0 0 0 0 /bin/echo Button 5
+B  32 + 0 0 0 0 /bin/echo Button 6
+B  64 + 0 0 0 0 /bin/echo Button 7
+B 128 + 0 0 0 0 /bin/echo Button 8
+B 256 + 0 0 0 0 /bin/echo Button 9
+B 512 + 0 0 0 0 /bin/echo Button 10
+
+# These are the axes
+A   1 + 0 0 0 0 /bin/echo Axis 1 low value pressed
+A   1 - 0 0 0 0 /bin/echo Axis 1 low value released
+A   2 + 0 0 0 0 /bin/echo Axis 1 high value
+A   4 + 0 0 0 0 /bin/echo Axis 2 low value
+A   8 + 0 0 0 0 /bin/echo Axis 2 high value
+A  16 + 0 0 0 0 /bin/echo Axis 3 low value
+A  32 + 0 0 0 0 /bin/echo Axis 3 high value
+A  64 + 0 0 0 0 /bin/echo Axis 4 low value
+A 128 + 0 0 0 0 /bin/echo Axis 4 high value

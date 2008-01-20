@@ -1,0 +1,28 @@
+
+2001-01-04
+
+This is a development release, so the new features are not documented
+very good yet. In fact, most of the documentation (especially in the
+doc/ directory) refers to old versions and often is PLAIN WRONG.
+
+* New action model *
+
+In this development version a new action model is introduced. The new
+model is more flexible and should be easier to understand
+(e.g. 'shift' is not needed any more, the requested 'triggers' work).
+
+See examples/joydrc.NEW for a working joydrc file. The new
+configuration file format is also described there.
+
+* BSD port *
+
+Vincent Bernat <bernat@free.fr> has done a port to OpenBSD. It should
+also work on NetBSD and FreeBSD. I've included the patches and changed
+the autoconf routine a bit.
+
+After that, I've completely changed the action model (see above). I've
+also tried to make joyreadbutton and joyreadaxis to work under
+BSD. The result is that I've totally messed up the fine BSD work of
+Vincent - I don't think it will run out of the box any more. But
+that's just fine because the main purpose of this release is to ask
+him if the BSD port still works ;-)

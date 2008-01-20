@@ -58,7 +58,7 @@
 
 /*  joyd 0.2.1 2000-05-25
  *
- *  - config.stdout renamed to config
+ *  - config.stdout renamed to config.std_out
  */
 
 /*  joyd 0.2.2 2000-10-11
@@ -83,6 +83,7 @@
  */
 
 #include "joyd.h"
+#include "parse_home.h"
 #include "options.h"
 #include "string.h"
 #include "log.h"
@@ -101,7 +102,6 @@ void SetDefaultValues()
 	config.std_out = SHOW_STDOUT;
 	config.config_file = AllocString(CONFIG_FILE);
 	config.daemon = DAEMON_MODE;
-	config.shiftkeys=SHIFT_KEYS;
 	
 	config.axes=0;
 	config.buttons=0;
@@ -188,7 +188,7 @@ void ClearActions()
 }
 
 
-void AddAction(unsigned long axes,unsigned long buttons,const char* const command)
+void AddAction(char type, unsigned int value, char action, unsigned int buttons_yes, unsigned int buttons_no, unsigned int axes_yes, unsigned int axes_no, char * command)
 /* This stores an action */
 {
 	char buffer[200]; /* should be sufficient for two long integer values */
@@ -202,23 +202,54 @@ void AddAction(unsigned long axes,unsigned long buttons,const char* const comman
 		exit(1);
 	}
 
-	config.action[config.action_count-1].axes=axes;
-	config.action[config.action_count-1].buttons=buttons;
+	/* copy char values */
+	if ((type == 'B') || (type == 'b')) {
+		config.action[config.action_count-1].type='B';
+	} else {
+		config.action[config.action_count-1].type='A';
+	}
+	if (action == '+') {
+		config.action[config.action_count-1].action='+';
+	} else {
+		config.action[config.action_count-1].action='-';
+	}
+
+	/* copy unsigned int values */
+	config.action[config.action_count-1].value=value;
+	config.action[config.action_count-1].buttons_yes=buttons_yes;
+	config.action[config.action_count-1].buttons_no=buttons_no;
+	config.action[config.action_count-1].axes_yes=axes_yes;
+	config.action[config.action_count-1].axes_no=axes_no;
+
+	/* copy char* values */
 	config.action[config.action_count-1].command=AllocString(command);
 
 	if (config.debug > 1) {
-		sprintf(buffer,"axis %li , button %li bound to ",axes,buttons);
+		if (type == 'B') {
+			sprintf(buffer,"%c button %li (%li %li %li %li) bound to ",action, value, buttons_yes, buttons_no, axes_yes, axes_no);
+		} else {
+			sprintf(buffer,"%c axis %li (%li %li %li %li) bound to ",action, value, buttons_yes, buttons_no, axes_yes, axes_no);
+		}
 		Print(stdout,buffer,command);
 	}
 	if (config.debug > 0) {
-		if ((axes == 0) && (buttons == 0)) {
-			Print(stdout,"warning: zero value for both axis and buttons",NOTHING);
+		if (value == 0) {
+			Print(stdout,"warning: zero value",NOTHING);
 		}
-		if (axes < 0) {
-			Print(stdout,"warning: negative axis value",NOTHING);
+		if (value < 0) {
+			Print(stdout,"warning: negative value",NOTHING);
 		}
-		if (buttons < 0) {
-			Print(stdout,"warning: negative buttons value",NOTHING);
+		if (buttons_yes < 0) {
+			Print(stdout,"warning: negative buttons_yes value",NOTHING);
+		}
+		if (buttons_no < 0) {
+			Print(stdout,"warning: negative buttons_yes value",NOTHING);
+		}
+		if (axes_yes < 0) {
+			Print(stdout,"warning: negative axes_yes value",NOTHING);
+		}
+		if (axes_no < 0) {
+			Print(stdout,"warning: negative axes_no value",NOTHING);
 		}
 		temp=Skip(command);
 		if (*temp == '\0') {
@@ -233,19 +264,32 @@ void ReadConfigFile()
 {
 	FILE *fhandle;
 	short int eof;
-	char *line,*cursor;
+	char *line, *cursor;
 	int section;
+
+	char *temp;
+	
+	/* Expand ~/ to home directory */
+	temp = config.config_file;
+	config.config_file = parse_home(temp);
+	if ((config.debug > 1) && (strcmp(temp, config.config_file) != 0)) {
+		Print(stdout, "~/ expanded to: ", config.config_file);
+	}
+	free(temp);
 
 	if (config.debug > 1) {
 		Print(stdout,"reading configuration file: ",config.config_file);
 	}
 
-	if ((fhandle = fopen(config.config_file,"r"))) {
+	if (strcmp(config.config_file, CONFIG_FROM_STDIN) == 0) {
+		fhandle = stdin;
 	} else {
-		Print(stderr,"exit: error: could not open configuration file: ",config.config_file);
-		exit(1);
+		if (! (fhandle = fopen(config.config_file,"r"))) {
+			Print(stderr,"exit: error: could not open configuration file: ",config.config_file);
+			exit(1);
+		}
 	}
-
+	  
 	config.cal_count=0;
 	ClearActions();
 
@@ -289,23 +333,44 @@ void ParseCalibrationLine(char * const command)
 void ParseActionLine(char * const command)
 /* This parses a line from the [action] section */
 {
-	char *axes;
-	char *buttons;
-	char *temp;
+	char *type, *value, *action;
+	char *buttons_yes, *buttons_no;
+	char *axes_yes, *axes_no;
 	char *cmd;
+	char *temp;
 
-	Split(command,&axes,&temp);
-	Split(temp,&buttons,&cmd);
+	Split(command,&type,&temp);
+	Split(temp,&value,&temp);
+	Split(temp,&action,&temp);
+	Split(temp,&buttons_yes,&temp);
+	Split(temp,&buttons_no,&temp);
+	Split(temp,&axes_yes,&temp);
+	Split(temp,&axes_no,&cmd);
 	free(temp);
 
-	if (cmd == NULL) {
-		Print(stderr,"exit: wrong format in action line: ",command);
+	if (type == NULL) {
+		Print(stderr,"exit: wrong format in action line: ", command);
 		exit(1);
 	}
-	AddAction(atol(axes),atol(buttons),cmd);
+	if (action == NULL) {
+		Print(stderr,"exit: wrong format in action line: ", command);
+		exit(1);
+	}
+	if (cmd == NULL) {
+		Print(stderr,"exit: wrong format in action line: ", command);
+		exit(1);
+	}
+	AddAction(type[0], atol(value), action[0],
+		  atol(buttons_yes), atol(buttons_no),
+		  atol(axes_yes), atol(axes_no), cmd);
 
-	free(axes);
-	free(buttons);
+	free(type);
+	free(value);
+	free(action);
+	free(buttons_yes);
+	free(buttons_no);
+	free(axes_yes);
+	free(axes_no);
 	free(cmd);
 }
 
@@ -325,68 +390,62 @@ void ParseGeneralLine(char * const command)
 		free(config.joy_device);
 		config.joy_device=AllocString(end);
 		if (config.debug > 1) {
-			Print(stdout,"device set to: ",config.joy_device);
+			Print(stdout,"device  set to: ",config.joy_device);
 		}
 	} else if (strcmp(begin,"config") == 0) {
 		free(config.config_file);
 		config.config_file=AllocString(end);
 		if (config.debug > 1) {
-			Print(stdout,"config set to: ",config.config_file);
+			Print(stdout,"config  set to: ",config.config_file);
 		}
 	} else if (strcmp(begin,"exit") == 0) {
 		free(config.action_exit);
 		config.action_exit=AllocString(end);
 		if (config.debug > 1) {
-			Print(stdout,"exit   set to: ",config.action_exit);
+			Print(stdout,"exit    set to: ",config.action_exit);
 		}
 	} else if (strcmp(begin,"reread") == 0) {
 		free(config.action_reread);
 		config.action_reread=AllocString(end);
 		if (config.debug > 1) {
-			Print(stdout,"reread set to: ",config.action_reread);
+			Print(stdout,"reread  set to: ",config.action_reread);
 		}
 /* Integer values */
 	} else if (strcmp(begin,"debug") == 0) {
 		config.debug=atoi(end);
 		if (config.debug > 1) {
 			sprintf(buffer,"%i",config.debug);
-			Print(stdout,"debug  set to: ",buffer);
+			Print(stdout,"debug   set to: ",buffer);
 		}
 	} else if (strcmp(begin,"syslog") == 0) {
 		config.syslog=atoi(end);
 		if (config.debug > 1) {
 			sprintf(buffer,"%i",config.syslog);
-			Print(stdout,"syslog set to: ",buffer);
+			Print(stdout,"syslog  set to: ",buffer);
 		}
 	} else if (strcmp(begin,"stdout") == 0) {
 		config.std_out=atoi(end);
 		if (config.debug > 1) {
 			sprintf(buffer,"%i",config.std_out);
-			Print(stdout,"stdout set to: ",buffer);
+			Print(stdout,"stdout  set to: ",buffer);
 		}
 	} else if (strcmp(begin,"daemon") == 0) {
 		config.daemon=atoi(end);
 		if (config.debug > 1) {
 			sprintf(buffer,"%i",config.daemon);
-			Print(stdout,"daemon set to: ",buffer);
-		}
-	} else if (strcmp(begin,"shift") == 0) {
-		config.shiftkeys=atoi(end);
-		if (config.debug > 1) {
-			sprintf(buffer,"%i",config.shiftkeys);
-			Print(stdout,"shift  set to: ",buffer);
+			Print(stdout,"daemon  set to: ",buffer);
 		}
 	} else if (strcmp(begin,"calmin") == 0) {
 		config.cal_min_default=atoi(end);
 		if (config.debug > 1) {
 			sprintf(buffer,"%i",config.cal_min_default);
-			Print(stdout,"calmin set to: ",buffer);
+			Print(stdout,"calmin  set to: ",buffer);
 		}
 	} else if (strcmp(begin,"calmax") == 0) {
 		config.cal_max_default=atoi(end);
 		if (config.debug > 1) {
 			sprintf(buffer,"%i",config.cal_max_default);
-			Print(stdout,"calmax set to: ",buffer);
+			Print(stdout,"calmax  set to: ",buffer);
 		}
 	} else {
 		Print(stderr,"exit: wrong command in configfile: ",command);
@@ -409,7 +468,7 @@ void ParseLine(char * const command,int *section)
 	} else if (strcmp(command,"[actions]") == 0) {
 		*section=3;
 	} else if (*section==0) {
-		Print(stderr,"exit: error: no section started in configfile: ",command);
+		Print(stderr,"exit: error: [section] misssing in configfile: ",command);
 		exit(1);
 	} else {
 		switch (*section) {

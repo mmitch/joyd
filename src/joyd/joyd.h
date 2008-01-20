@@ -23,15 +23,19 @@
  *
  */
 
-/* default joystick device */
+/* default joystick device (different for BSD and Linux) */
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#define JOY_DEVICE "/dev/joy0"
+#else
 #define JOY_DEVICE "/dev/js0"
+#endif
 
 /* default configuration file */
-#define CONFIG_FILE "joydrc"
+#define CONFIG_FILE "~/.joydrc"
 
 /* show debug information?
    (0=be quiet, 1=some messages, 2=more messages, 3=full debug) */
-#define SHOW_DEBUG 1
+#define SHOW_DEBUG 3
 
 /* show messages on stdout? (0=no, 1=yes) */
 #define SHOW_STDOUT 1
@@ -51,9 +55,6 @@
 /* start in daemon mode? (0=foreground, 1=background) */
 #define DAEMON_MODE 0
 
-/* default value for buttons that act as "shift keys" */
-#define SHIFT_KEYS 0
-
 /* default min calibration value */
 #define CALIBRATION_MIN -16384
 
@@ -65,6 +66,16 @@
 
 /* default action for rereading configuration file */
 #define ACTION_REREAD "$reread$"
+
+
+/* BSD only variables BEGIN */
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+
+/* the waiting time after reading the joystick port (in microseconds) */
+#define TIMEOUT_JS 50000
+
+#endif
+/* BSD only variables END */
 
 
 /*
@@ -79,9 +90,9 @@
 #define PROGRAM_NAME "joyd"
 
 /* program version */
-#define PROGRAM_VERSION PROGRAM_NAME " 0.2.2 2000-10-11"
+#define PROGRAM_VERSION PROGRAM_NAME " 0.3.0 2001-01-04"
 
-/* length of buffer for joypad name */
+/* length of buffer for joystick name */
 #define NAME_LENGTH 128
 
 /* an empty string */
@@ -96,9 +107,15 @@
 /* the long command line argument used to show the version of joyd */
 #define PRINT_VERSION_LONG "--version"
 
+/* the long command line argument used to show the help page of joyd */
+#define PRINT_HELP_LONG "--help"
+
 /* the informative text to show with the version number */
 #define PROGRAM_INFOTEXT "usage: " PROGRAM_NAME " {configuration file}\n" \
                          "documentation is installed under " DOCDIR
+
+/* the filename that means stdin */
+#define CONFIG_FROM_STDIN "-"
 
 /*
  * The structure for calibration values
@@ -112,9 +129,14 @@ typedef struct scalibration {
  * The structure for an action
  */
 typedef struct saction {
-	unsigned long axes;
-	unsigned long buttons;
-	char *command;
+	char type;                 /* 'B'utton or 'A'xis                    */
+	unsigned int value;        /* Which button/axis?                    */
+	char action;               /* '+'==press, '-'==release              */
+	unsigned int buttons_yes;  /* other buttons that must be pressed    */
+	unsigned int buttons_no;   /* other buttons that mustn't be pressed */
+	unsigned int axes_yes;     /* other axes that must be "on"          */
+	unsigned int axes_no;      /* other axes that mustn't be "on"       */
+	char *command;             /* the command to execute                */
 } TACTION;
 
 /*
@@ -125,7 +147,6 @@ typedef struct sconfig {
 	int syslog;
 	int std_out;
 	int daemon;
-	int shiftkeys;
 	char *config_file;
 
 	char *action_exit;

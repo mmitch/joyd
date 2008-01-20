@@ -30,21 +30,21 @@
  * reboot your computer when your keyboard is hung or you can even use
  * your system without any keyboard at all. 
  *
- * I use one of my computers (no screen, no keyboard) for listening to
- * mp3-files - with this program I can stop/start/skip songs, change
- * the volume, shutdown the computer and much more just by using an
- * joypad (in fact, it's an original SNES joypad).
+ * I use one of my computers (no screen, no keyboard, no hard disks)
+ * for listening to mp3-files - with this program I can stop, start
+ * and skip songs, change the volume, shutdown the computer and much
+ * more just by using an joypad (it's in fact an original SNES
+ * joypad!).
  *
  * If you use this and find it useful, please let me know!
  * If you find a bug or have any suggestions or questions: tell me!
  *
  * My mail adress is:    <mitch@uni.de>
- * My homepage is here:  http://www.h.shuttle.de/mitch/
+ * My homepage is here:  http://www.cgarbs.de/
  *
  *
  *                                    Now enjoy this.
- *                                    Christian
- */
+ *                                    Christian */
 
 /*
  * This program is based on jstest.c Version 1.2 by Vojtech Pavlik,
@@ -161,14 +161,15 @@ int main (int argc, char **argv)
 {
 	/* don't tell me that this condition looks ugly... */
 	if (    (argc > 2)
-	     || (
-                   (argc == 2)
-                && (
-                      (strcmp(argv[1],PRINT_VERSION)      == 0)
-		   || (strcmp(argv[1],PRINT_VERSION_LONG) == 0)
-		   )
-                 )
-           ) {
+		|| (
+			(argc == 2)
+			&& (
+				(strcmp(argv[1],PRINT_VERSION)      == 0)
+				|| (strcmp(argv[1],PRINT_VERSION_LONG) == 0)
+				|| (strcmp(argv[1],PRINT_HELP_LONG)    == 0)
+				)
+			)
+		) {
 		printf(PROGRAM_VERSION "\n");
 		printf(PROGRAM_INFOTEXT "\n");
 		exit(0);

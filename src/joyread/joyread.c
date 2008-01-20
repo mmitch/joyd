@@ -29,10 +29,18 @@
  * jstest.c Version 1.2 - Copyright (c) 1996-1999 Vojtech Pavlik
  */
 
+/*
+ * Return codes:
+ * 0 - success
+ * 1 - error during open/read/close (perhaps /dev/js? doesn't exist or
+ *     is no joystick)
+ * 2 - no value: the specified button/axis doesn't exist on the given
+ *               joystick
+ */
+
 /*  joyd 0.0.6 2000-04-06
  *
- *  merged joyreadaxis.c and joyreadbutton.c into this file
- */
+ *  merged joyreadaxis.c and joyreadbutton.c into this file */
 
 /*  joyd 0.0.7 2000-04-13
  *
@@ -69,13 +77,10 @@
  *
  * You must either compile this file with -DCHECK_AXIS or
  * -DCHECK_BUTTON to select whether to show the axis or button
- * status. This makes the code somewhat ugly but changes apply to
- * both programs at the same time.
- *
+ * status. This makes the easier to maintain.
  */
 
-#ifdef CHECK_AXIS
-/* __axis__ */
+#ifdef CHECK_AXIS /* __axis__ */
 #ifdef CHECK_BUTTON
 /* axis && button */
 #error You cannot use both -DCHECK_AXIS and -DCHECK_BUTTON
@@ -90,7 +95,7 @@
 #define PROGRAM_NAME "joyreadbutton"
 #else
 /* !axis && !button */
-#error You must either use -DCHECK_AXIS or -DCHECK_BUTTON
+#error You must either set -DCHECK_AXIS or -DCHECK_BUTTON
 #endif
 #endif
 
@@ -101,47 +106,68 @@ int main (int argc, char **argv)
 	unsigned char axes;
 	unsigned char buttons;
 
+	int found_something = 0;
+
 	int i;
 	struct js_event js;
 
-	if (argc != 3 ) {
+	if (argc != 3 )
+	{
 		fprintf(stderr,"\nUsage: " PROGRAM_NAME " <device> <axis>\n\n");
 		exit(1);
 	}
-	if ((fd = open(argv[1], O_RDONLY)) < 0) {
+
+	if ((fd = open(argv[1], O_RDONLY)) < 0)
+	{
 		perror(PROGRAM_NAME);
 		exit(1);
 	}
 
-	ioctl(fd, JSIOCGAXES, &axes);
-	ioctl(fd, JSIOCGBUTTONS, &buttons);
+#ifdef __OpenBSD__
+        /* OpenBSD does not support different joysticks, there are
+           always 2 axes and 2 buttons */
+        axes    = 2;
+        buttons = 2;
+#else
+        ioctl(fd, JSIOCGAXES, &axes);
+        ioctl(fd, JSIOCGBUTTONS, &buttons);
+#endif
 	
-	/* Just read the JS_EVENT_INIT events to see what the current state
-           of the joystick is, then exit */
+	/* Just read the JS_EVENT_INIT events to see what the current
+           state of the joystick is, then exit */
 
-	for (i=0;i<axes+buttons;i++) {
-		if (read(fd, &js, sizeof(struct js_event)) != sizeof(struct js_event)) {
+	for (i=0;i<axes+buttons;i++)
+	{
+		if (read(fd, &js, sizeof(struct js_event)) != sizeof(struct js_event))
+		{
 			perror("\n"PROGRAM_NAME": error reading");
 			exit (1);
 		}
 		
-		switch(js.type & ~JS_EVENT_INIT) {
-		case JS_EVENT_BUTTON:
 #ifdef CHECK_BUTTON
-			if (js.number == atoi(argv[2])) {
-				printf("%d\n",js.value);
-			}
+		if ((js.type & ~JS_EVENT_INIT) == JS_EVENT_BUTTON)
+#else
+		if ((js.type & ~JS_EVENT_INIT) == JS_EVENT_AXIS)
 #endif
-			break;
-		case JS_EVENT_AXIS:
-#ifdef CHECK_AXIS
-			if (js.number == atoi(argv[2])) {
+		{
+			if (js.number == atoi(argv[2]))
+			{
 				printf("%d\n",js.value);
+				found_something = 1;
 			}
-#endif
-			break;
 		}
 	}
 	
-	return 0;
+	if (close(fd))
+	{
+		perror(PROGRAM_NAME);
+		exit(1);
+	}
+
+	if (found_something) 
+	{
+		return 0;
+	} else {
+		return 2;
+	}
 }

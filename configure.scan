@@ -1,8 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(src/joyd/daemon.c)
+AC_INIT(src/joyd/CVS/Base/joystick.c)
 
 dnl Checks for programs.
-AC_PROG_CC
 AC_PROG_INSTALL
 
 dnl Checks for libraries.
