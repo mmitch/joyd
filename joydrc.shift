@@ -17,8 +17,8 @@ daemon	0
 debug	2
 stdout	1
 syslog	0
-calmin	-8000
-calmax	8000
+calmin	-16384
+calmax	16383
 exit	$exit$
 
 # Here we set Button 1 to shift key mode:

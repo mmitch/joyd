@@ -3,7 +3,7 @@
  *
  *    this is the main file of:
  *
- *    joyd 0.0.2   ---   The Joystick Daemon
+ *    joyd 0.0.3   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -79,9 +79,14 @@
  *  - "joyd -v" prints the version number
  */
 
+/*  joyd 0.0.3 2000-01-17
+ *
+ *  - changed the JOYD_VERSION macro to PROGRAM_VERSION
+ */
+
 /*
  *  2do:
- *  - implement shift_axes like shift_keys?
+ *  ? implement shift_axes like shift_keys
  */
 
 /*****************************************************************************
@@ -124,14 +129,14 @@ int main (int argc, char **argv)
 /* simple main program */
 {
 	if ((argc > 1) && (strcmp(argv[1],PRINT_VERSION) == 0)) {
-		printf(JOYD_VERSION "\n");
+		printf(PROGRAM_VERSION "\n");
 		exit(0);
 	};
 
 	SetDefaultValues();
 
 	if (config.debug > 1) {
-		Print(stdout,JOYD_VERSION," starting up");
+		Print(stdout,PROGRAM_VERSION," starting up");
 	}
 
 	InstallSignalHandler();
@@ -155,7 +160,7 @@ int main (int argc, char **argv)
 
 	CloseJoystick();
 
-	Print(stdout,JOYD_VERSION," quits now (should've never come around here!?)");
+	Print(stdout,PROGRAM_VERSION," quits now (should've never come around here!?)");
 
 	return 0;
 }

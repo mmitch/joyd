@@ -1,17 +1,29 @@
 SHELL=/bin/sh
 
+#optimize:
+#CFLAGS=-O3 -Wall
+
+#debug:
 #CFLAGS=-g -Wall
 
 # Programmname (für kurze eine-Quelldatei-Projekte)
 PROG=joyd
-VERSION=0.0.2
+VERSION=0.0.3
 
 #
 # How to create patches (outside both directories):
-# LC_ALL=C TZ=UTC0 diff -Naur old-path new-path
+# LC_ALL=C TZ=UTC0 diff -Naru old-path new-path
 #
 # How to apply patches (in "old" directory):
 # patch -Np1
+#
+# How to publish:
+# - change ALL version numbers
+# - www.h.shuttle.de
+# - metalab.unc.edu
+# - www.freshmeat.net
+# - new version in Makefile
+#
 
 # Name fuer tar-archiv
 TARGZ=$(PROG)-$(VERSION)

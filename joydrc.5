@@ -14,7 +14,7 @@
 .TP 0.5i
 .B "\\$1 "
 ..
-.TH JOYDRC 5 "Jan 10 2000" "v0.0.2"
+.TH JOYDRC 5 "Jan 17 2000" "v0.0.3"
 .SH NAME
 .B joydrc
 \- configuration file for the joystick daemon
@@ -65,7 +65,7 @@ respectively).
 If you use an analog device,
 .B joyd
 will have to decide when an axis has reached it's low or high
-value. The joystick will give back a value between \-16384 and 16387
+value. The joystick will give back a value between \-32768 and 32767
 and
 .B joyd
 will compare it to two calibration variables. If the value is lower

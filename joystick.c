@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.2   ---   The Joystick Daemon
+ *    joyd 0.0.3   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -32,6 +32,12 @@
 /*  joyd 0.0.2 2000-01-10
  *
  *  - the ActionLoop() function got split up into smaller parts
+ */
+
+/*  joyd 0.0.3 2000-01-17
+ *
+ *  - replaced the string "joyd" by the macro PROGRAM_NAME
+ *  - replaced the macro JOYD_VERSION by PROGRAM_VERSION
  */
 
 /*****************************************************************************
@@ -71,7 +77,7 @@ void OpenJoystick()
 	char buffer[256]; /* should be long enough, we're just showing integer values */
 
         if ((config.fd = open(config.joy_device, O_RDONLY)) < 0) {
-		perror("joyd");
+		perror(PROGRAM_NAME);
 		exit(1);
 	}
 
@@ -96,7 +102,7 @@ void CloseJoystick()
 /* This initializes the joystick */
 {
         if (close(config.fd) != 0) {
-		perror("joyd");
+		perror(PROGRAM_NAME);
 		exit(1);
 	}
 }
@@ -108,7 +114,7 @@ struct js_event WaitForJoystickEvent()
 	struct js_event js;
 
 	if (read(config.fd, &js, sizeof(struct js_event)) != sizeof(struct js_event)) {
-		perror("\njoyd: error reading");
+		perror(PROGRAM_NAME ": error reading");
 		exit (1);
 	}
 	return js;
@@ -199,7 +205,7 @@ void ActionLoop()
 	struct js_event js;
 	char buffer[256]; /* should be enough for three long integers */
 	
-	Print(stdout,JOYD_VERSION," is running");
+	Print(stdout,PROGRAM_VERSION," is running");
 	
 	while (1) {
 

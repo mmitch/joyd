@@ -14,7 +14,7 @@
 .TP 0.5i
 .B "\\$1 "
 ..
-.TH JOYD 1 "Jan 10 2000" "v0.0.2"
+.TH JOYD 1 "Jan 17 2000" "v0.0.3"
 .SH NAME
 .B joyd
 \- a joystick daemon
@@ -74,6 +74,9 @@ If you have only one
 .B joyd
 running, you could also say
 .B killall joyd
+(you are able to start multiple instances of
+.B joyd
+- they can even share the same joystick device).
 Note that you can also bind the exit command to your joystick.
 
 When
@@ -96,7 +99,7 @@ for an example of this.
 When joyd receives the SIGHUP signal, it will reread its configuration
 file (for example
 .B kill -HUP <PID>
- where PID can be found out using
+where PID can be found out using
 .B ps aux
 ).
 .

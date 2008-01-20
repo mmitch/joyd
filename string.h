@@ -1,3 +1,10 @@
+/* string.h
+ *
+ * part of
+ * joyd 0.0.3 2000-01-17
+ *
+ */
+
 #ifndef _STRING_H_INCLUDED_
 #define _STRING_H_INCLUDED_
 

@@ -15,8 +15,8 @@ stdout	1
 syslog	0
 
 [calibration]
--500	500
--12000	12000
+-2000	2000
+-30000	30000
 
 [actions]
 

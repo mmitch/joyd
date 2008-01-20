@@ -1,9 +1,27 @@
+    =============================================================
+   :                                                             :
+   : Please send a short mail to <mitch@uni.de>                  :
+   :                                                             :
+   : I'd like to know if you had any problems with joyd, if the  :
+   : manual is too complicated or if it just works the way it    :
+   : should.                                                     :
+   :                                                             :
+   : The calibration code is still untested because I don't have :
+   : an analog device. So you have to tell me if it works the    :
+   : way it is supposed to.                                      :
+   :                                                             :
+   : Thank you!                                                  :
+   :                                                             :
+    =============================================================
+   
 
-	joyd 0.0.2   ---   The Joystick Daemon
+
+	joyd 0.0.3   ---   The Joystick Daemon  (2000-01-17)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
-	This is GNU GPL.
+	This is GNU GPL. See COPYING for details.
+
 
 
   FOR THE IMPATIENT
@@ -37,6 +55,12 @@ itself still be controlled by joystick commands or signals (e.g.
 SIGHUP). joyd is also able to log its output to syslog.
 
 
+  REQUIREMENTS
+  ~~~~~~~~~~~~
+
+You need a device that is supported by the Linux Joystick Driver.
+
+
   INSTALLATION
   ~~~~~~~~~~~~
 
@@ -47,13 +71,14 @@ If you want to change the installation defaults, take a look at
 
 Then type "make" to compile the binary. You can install the binary and
 the manpages by typing "make install" (you propably need to be root to
-do this).
+do this). You can acces the manpages by typing "man 1 joyd" or "man 5
+joydrc".
 
 If you want to uninstall the binary and the manpages, then type
 "make uninstall" (again, you propably need to be root).
 
 
-  USING JOYD
+  USING JOYD  -  see also joyd(1)
   ~~~~~~~~~~
 
 Start joyd as "joyd". It accepts one command line argument, this is
@@ -69,8 +94,9 @@ you want to stop a normal joyd, simply press ctrl-c.
 
 If you want to stop a joyd daemon, you have to look up its PID using
 "ps aux" and then kill it by typing "kill <PID>". If you have only one
-joyd running, you could also say "killall joyd". Note that you can
-also bind the exit command to your joystick.
+joyd running, you could also say "killall joyd" (you are able to
+start multiple joyds, they can even share the same joystick device).
+Note that you can also bind the exit command to your joystick.
 
 When joyd is running, you can execute the commands given in the
 configuration file by using your joystick. joyd scans the axes and
@@ -129,14 +155,14 @@ respectively).
 
 If you use an analog device, joyd will have to decide when an axis has
 reached it's low or high value. The joystick will give back a value
-between -16384 and 16387 and joyd will compare it to two calibration
+between -32768 and 32767 and joyd will compare it to two calibration
 variables. If the value is lower than the minimum calibration then it
 is considered as "low", if the value is higher than the maximum
 calibration then it is considered as "high". By changing these values,
 you can make your joystick act more (or less) sensitively.
 
 
-  CONFIGURATION FILES
+  CONFIGURATION FILES  -  see also joydrc(5)
   ~~~~~~~~~~~~~~~~~~~
 
 A configuration file is a plain ascii file. Lines beginning with # are
@@ -247,4 +273,4 @@ joyd should also be available from MetaLab.unc.edu in the directory
 
 				________________________________
 				I hope that you find this useful
-				Christian, 2000-01-10
+				Christian, 2000-01-17

@@ -1,3 +1,10 @@
+/* log.h
+ *
+ * part of
+ * joyd 0.0.3 2000-01-17
+ *
+ */
+
 #ifndef _LOG_H_INCLUDED_
 #define _LOG_H_INCLUDED_
 

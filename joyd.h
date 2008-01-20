@@ -1,3 +1,10 @@
+/* joyd.h
+ *
+ * part of
+ * joyd 0.0.3 2000-01-17
+ *
+ */
+
 #ifndef _JOYD_H_INCLUDED_
 #define _JOYD_H_INCLUDED_
 
@@ -42,10 +49,10 @@
 #define SHIFT_KEYS 0
 
 /* default min calibration value */
-#define CALIBRATION_MIN -8000
+#define CALIBRATION_MIN -16384
 
 /* default max calibration value */
-#define CALIBRATION_MAX 8000
+#define CALIBRATION_MAX 16383
 
 /* default action for exiting joyd */
 #define ACTION_EXIT "$exit$"
@@ -61,17 +68,17 @@
  */
 
 
-/* program name and version */
-#define JOYD_VERSION "joyd 0.0.2 2000-01-10"
+/* program name */
+#define PROGRAM_NAME "joyd"
+
+/* program version */
+#define PROGRAM_VERSION PROGRAM_NAME " 0.0.3 2000-01-17"
 
 /* length of buffer for joypad name */
 #define NAME_LENGTH 128
 
 /* an empty string */
 #define NOTHING "\0"
-
-/* program name for sysout (perhaps use argv[0] ?) */
-#define PROGRAM_NAME "joyd"
 
 /* this is the comment sign in the configuration file */
 #define COMMENT_SIGN '#'

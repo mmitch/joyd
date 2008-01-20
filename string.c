@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.2   ---   The Joystick Daemon
+ *    joyd 0.0.3   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -30,6 +30,7 @@
  */
 
 /*  joyd 0.0.2 2000-01-10
+ *  joyd 0.0.3 2000-01-17
  *
  *  (no changes)
  */
