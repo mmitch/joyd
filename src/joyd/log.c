@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.2.0   ---   The Joystick Daemon
+ *    joyd 0.2.1   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -40,6 +40,11 @@
  *  (no changes)
  */
 
+/*  joyd 0.2.1 2000-05-25
+ *
+ *  - config.stdout renamed to config.std_out
+ */
+
 /*****************************************************************************
  * now goes it loose...                                                      *
  *****************************************************************************/
@@ -67,7 +72,7 @@
 void Print(FILE *const fhandle,const char *const string1,const char *const string2)
 /* This Logs a message to a file and syslog */
 {
-	if ((fhandle!=stdout) || (config.stdout)) {
+	if ((fhandle!=stdout) || (config.std_out)) {
 		fprintf(fhandle,"%s%s\n",string1,string2);
 		fflush(fhandle);
 	}

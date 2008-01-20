@@ -1,7 +1,7 @@
 /* joyd.h
  *
  * part of
- * joyd 0.2.0 2000-04-22
+ * joyd 0.2.1 2000-05-25
  *
  */
 
@@ -66,6 +66,7 @@
 /* default action for rereading configuration file */
 #define ACTION_REREAD "$reread$"
 
+
 /*
  *
  *   STOP!
@@ -78,7 +79,7 @@
 #define PROGRAM_NAME "joyd"
 
 /* program version */
-#define PROGRAM_VERSION PROGRAM_NAME " 0.2.0 2000-04-22"
+#define PROGRAM_VERSION PROGRAM_NAME " 0.2.1 2000-05-25"
 
 /* length of buffer for joypad name */
 #define NAME_LENGTH 128
@@ -122,7 +123,7 @@ typedef struct saction {
 typedef struct sconfig {
 	int debug;
 	int syslog;
-	int stdout;
+	int std_out;
 	int daemon;
 	int shiftkeys;
 	char *config_file;

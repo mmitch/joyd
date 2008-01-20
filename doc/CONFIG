@@ -23,11 +23,10 @@ Left              | Axis 1 low       | [a] 0 to -32767
 #
 
 
-  T A B L E   O F   C O N T E N T S
+  T A B L E   O F   C O N T E N T S  for joyd v0.2.1
   =================================
 
-
-  As of joyd version 0.2.0 you will find info on these joysticks:
+  (no changes since 0.2.0)
 
     - Gravis GamePad Pro (USB)
     - Microsoft Sidewinder Force Feedback Pro

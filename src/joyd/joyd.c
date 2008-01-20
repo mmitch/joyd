@@ -3,7 +3,7 @@
  *
  *    this is the main file of:
  *
- *    joyd 0.2.0   ---   The Joystick Daemon
+ *    joyd 0.2.1   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -99,8 +99,13 @@
 
 /*  joyd 0.2.0 2000-04-22
  *
- *  - "joyd --version" also prints the version number (like "joyd -v")
+ *  - "joyd --version" prints the version number (like "joyd -v")
  *  - print of version number additionally prints short help text
+ */
+
+/*  joyd 0.2.1 2000-05-25
+ *
+ *  (no changes)
  */
 
 /*

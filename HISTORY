@@ -1,3 +1,11 @@
+joyd 0.2.1 2000-05-25
+~~~~~~~~~~~~~~~~~~~~~
+ - fixed permissions in tar.gz-archive (everything was 0777)
+ - config.stdout renamed to config.std_out due to an error in 
+   /usr/include/stdio.h in older libc6 systems
+
+
+
 joyd 0.2.0 2000-04-22
 ~~~~~~~~~~~~~~~~~~~~~
  - support of GNU autoconf/configure

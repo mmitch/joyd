@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.2.0   ---   The Joystick Daemon
+ *    joyd 0.2.1   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -31,7 +31,7 @@
 
 /*  joyd 0.0.2 2000-01-10
  *
- *  renamed this file to options.c
+ *  - renamed this file to options.c
  */
 
 /*  joyd 0.0.3 2000-01-17
@@ -43,17 +43,22 @@
 
 /*  joyd 0.0.6 2000-04-06
  *
- *  type cast of GetLine() to signed char (otherwise won't compile on PPC)
+ *  - type cast of GetLine() to signed char (otherwise won't compile on PPC)
  */
 
 /*  joyd 0.0.7 2000-04-13
  *
- *  type cast of GetLine() removed, EOF is cast to char instead
+ *  - type cast of GetLine() removed, EOF is cast to char instead
  */
 
 /*  joyd 0.2.0 2000-04-22
  *
  *  (no changes)
+ */
+
+/*  joyd 0.2.1 2000-05-25
+ *
+ *  - config.stdout renamed to config
  */
 
 /*****************************************************************************
@@ -88,7 +93,7 @@ void SetDefaultValues()
 {
 	config.debug = SHOW_DEBUG;
 	config.syslog = SHOW_SYSLOG;
-	config.stdout = SHOW_STDOUT;
+	config.std_out = SHOW_STDOUT;
 	config.config_file = AllocString(CONFIG_FILE);
 	config.daemon = DAEMON_MODE;
 	config.shiftkeys=SHIFT_KEYS;
@@ -349,9 +354,9 @@ void ParseGeneralLine(char * const command)
 			Print(stdout,"syslog set to: ",buffer);
 		}
 	} else if (strcmp(begin,"stdout") == 0) {
-		config.stdout=atoi(end);
+		config.std_out=atoi(end);
 		if (config.debug > 1) {
-			sprintf(buffer,"%i",config.stdout);
+			sprintf(buffer,"%i",config.std_out);
 			Print(stdout,"stdout set to: ",buffer);
 		}
 	} else if (strcmp(begin,"daemon") == 0) {

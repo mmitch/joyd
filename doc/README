@@ -1,5 +1,5 @@
 
-	joyd 0.2.0   ---   The Joystick Daemon  (2000-04-22)
+	joyd 0.2.1   ---   The Joystick Daemon  (2000-05-25)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -277,15 +277,22 @@ $ joyreadbutton /dev/js1 0
   THANKS
   ~~~~~~
 
-Florian Paetz <fpaetz@gmx.de> for some suggestions on good C coding
-style and finding the "external" bug in v0.0.1
+Ludwig Nussel <ludwig.nussel@gmx.de> for finally pointing out the
+reason for the error with config.stdout on some systems (the error
+has been fixed in v0.2.1)
 
-Derrick Pallas <omegakon@bigfoot.com> for reporting and fixing the
-problems with joysticks which report buttons as axes in v0.0.5
+Bastian Bowe <BaBowe@gmx.de> for reporting the config.stdout bug and
+sending the workaround in 0.2.1
 
 Stephane Louise <luigi@fleming.u-psud.fr> for sending a patches to
 make joyd compile on PPC systems (problems with EOF and
 signed/unsigned char) in v0.0.6 and v0.0.7
+
+Derrick Pallas <omegakon@bigfoot.com> for reporting and fixing the
+problems with joysticks which report buttons as axes in v0.0.5
+
+Florian Paetz <fpaetz@gmx.de> for some suggestions on good C coding
+style and finding the "external" bug in v0.0.1
 
 
   CONTACT

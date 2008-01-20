@@ -1,16 +1,17 @@
 # name and version of package
 PROG=joyd
-VERSION=0.2.0
+VERSION=0.2.1
 
-OLDVERSION=0.0.7
-NEXTVERSION=0.2.1
+OLDVERSION=0.2.0
+NEXTVERSION=0.2.2
 
 #
 # How to create patches (outside both directories):
 # LC_ALL=C TZ=UTC0 diff -Naru old-path new-path
 #
 # How to publish:
-# - change ALL version numbers (manpages!)
+# - check out permissions in tar.gz (has changed in 0.2.1)
+# - change ALL version numbers (manpages!, lsm entry)
 # - www.h.shuttle.de
 # - metalab.unc.edu
 # - www.freshmeat.net
@@ -117,7 +118,27 @@ dist:	distclean
 	cp $(srcdir)/install-sh $(srcdir)/$(TARGZ)
 	cp $(srcdir)/mkinstalldirs $(srcdir)/$(TARGZ)
 	chmod 777 $(srcdir)/$(TARGZ)
-	chmod -R 777 $(srcdir)/$(TARGZ)/*
+
+	chmod 666 $(srcdir)/$(TARGZ)/*
+	chmod 777 $(srcdir)/$(TARGZ)/configure
+	chmod 777 $(srcdir)/$(TARGZ)/install-sh
+	chmod 777 $(srcdir)/$(TARGZ)/mkinstalldirs
+
+	chmod 777 $(srcdir)/$(TARGZ)/doc
+	chmod 666 $(srcdir)/$(TARGZ)/doc/*
+
+	chmod 777 $(srcdir)/$(TARGZ)/examples
+	chmod 666 $(srcdir)/$(TARGZ)/examples/*
+
+	chmod 777 $(srcdir)/$(TARGZ)/src
+	chmod 666 $(srcdir)/$(TARGZ)/src/*
+
+	chmod 777 $(srcdir)/$(TARGZ)/src/joyd
+	chmod 666 $(srcdir)/$(TARGZ)/src/joyd/*
+
+	chmod 777 $(srcdir)/$(TARGZ)/src/joyread
+	chmod 666 $(srcdir)/$(TARGZ)/src/joyread/*
+
 	tar -c $(srcdir)/$(TARGZ) -zvf $(srcdir)/$(TARGZ).tar.gz
 	rm  -rf $(srcdir)/$(TARGZ)
 
