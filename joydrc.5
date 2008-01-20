@@ -14,7 +14,7 @@
 .TP 0.5i
 .B "\\$1 "
 ..
-.TH JOYDRC 5 "Jan 17 2000" "v0.0.3"
+.TH JOYDRC 5 "Feb 09 2000" "v0.0.4"
 .SH NAME
 .B joydrc
 \- configuration file for the joystick daemon
@@ -184,8 +184,25 @@ You can bind multiple commands to one combination of axes/buttons. The
 commands are then executed in the order they appear in the
 configuration file.
 .
+.SH "DEFAULT VALUES"
+If you omit some of the options above, joyd will use these default
+values:
+.PP
+.ft CW
+ calmin -16384
+ calmax 16383
+ daemon 0
+ debug  1
+ device /dev/js0
+ exit   $exit$
+ reread $reread$
+ shift  0
+ stdout 1
+ syslog 0
+.ft CW
+.
 .SH "SEE ALSO"
-.BR joydrc(1)
+.BR joyd(1)
 .
 .\"SH
 .\"BUGS

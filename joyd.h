@@ -1,7 +1,7 @@
 /* joyd.h
  *
  * part of
- * joyd 0.0.3 2000-01-17
+ * joyd 0.0.4 2000-02-09
  *
  */
 
@@ -15,6 +15,12 @@
  *
  *   After changing this file use "make clean",
  *   "make all" to let the changes become active.
+ *
+ *   If you change these default settings, then
+ *   please also edit the "default values" section
+ *   of the joydrc(5) manpage (see file joydrc.5).
+ *   Otherwise you will confuse your users.
+ *
  */
 
 /* default joystick device */

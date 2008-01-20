@@ -16,7 +16,7 @@
    
 
 
-	joyd 0.0.3   ---   The Joystick Daemon  (2000-01-17)
+	joyd 0.0.4   ---   The Joystick Daemon  (2000-02-09)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -59,6 +59,13 @@ SIGHUP). joyd is also able to log its output to syslog.
   ~~~~~~~~~~~~
 
 You need a device that is supported by the Linux Joystick Driver.
+You need to have the Linux Joystick Driver installed properly.
+You need the libraries and header files of the Linux Joystick Driver.
+
+The Linux Joystick Driver is included with the recent Linux Kernel
+Sources available at http://www.kernel.org
+You can also download the Linux Joystick Driver directly from
+http://atrey.karlin.mff.cuni.cz/~vojtech/joystick/
 
 
   INSTALLATION
@@ -273,4 +280,4 @@ joyd should also be available from MetaLab.unc.edu in the directory
 
 				________________________________
 				I hope that you find this useful
-				Christian, 2000-01-17
+				Christian, 2000-02-09

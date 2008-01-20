@@ -8,7 +8,7 @@ SHELL=/bin/sh
 
 # Programmname (für kurze eine-Quelldatei-Projekte)
 PROG=joyd
-VERSION=0.0.3
+VERSION=0.0.4
 
 #
 # How to create patches (outside both directories):
@@ -22,6 +22,7 @@ VERSION=0.0.3
 # - www.h.shuttle.de
 # - metalab.unc.edu
 # - www.freshmeat.net
+# - server51.freshmeat.net
 # - new version in Makefile
 #
 
