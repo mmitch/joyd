@@ -57,6 +57,7 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /*
  * my headers and definitions

@@ -481,7 +481,6 @@ void ParseLine(char * const command,int *section)
 		case 3:
 			ParseActionLine(command);
 			break;
-		default:
 		}
 	}
 }
