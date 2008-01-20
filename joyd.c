@@ -3,7 +3,7 @@
  *
  *    this is the main file of:
  *
- *    joyd 0.0.5   ---   The Joystick Daemon
+ *    joyd 0.0.6   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -64,6 +64,11 @@
  *****************************************************************************/
 
 
+/*     These are just the changes to this file.
+ *     See the HISTORY file for changes on the whole package.
+ */
+
+
 /*  joyd 0.0.1 2000-01-09
  *
  *  first version
@@ -86,6 +91,7 @@
 
 /*  joyd 0.0.4 2000-02-09
  *  joyd 0.0.5 2000-03-19
+ *  joyd 0.0.6 2000-04-06
  *
  *  (no changes)
  */

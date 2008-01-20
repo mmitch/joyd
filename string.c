@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.5   ---   The Joystick Daemon
+ *    joyd 0.0.6   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -35,6 +35,11 @@
  *  joyd 0.0.5 2000-03-19
  *
  *  (no changes)
+ */
+
+/*  joyd 0.0.6 2000-04-06
+ *
+ *  type cast of fgetc() to signed char (otherwise won't compile on PPC)
  */
 
 /*****************************************************************************
@@ -72,7 +77,7 @@ char *GetLine(FILE *const fhandle)
 	
 	tmp=(char *) calloc(1,sizeof(char));
 
-	while (((c=fgetc(fhandle)) != 10) && (c != EOF)) {
+	while (((c=(signed char) fgetc(fhandle)) != 10) && (c != EOF)) {
 		tmp2=tmp;
 		tmp=(char *) calloc(i+2,sizeof(char));
 		strcpy(tmp,tmp2);

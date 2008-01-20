@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.5   ---   The Joystick Daemon
+ *    joyd 0.0.6   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -41,16 +41,19 @@
  */
 
 /*  joyd 0.0.4 2000-02-09
- *  joyd 0.0.5 2000-03-19
  *
  *  (no changes)
  */
 
-/*  joyd 0.0.5 2000-xx-xx
+/*  joyd 0.0.5 2000-03-19
  *
  *  - axis values are compared with "<=" and ">=" instead of "<" and ">"
  */
 
+/*  joyd 0.0.6 2000-04-06
+ *
+ *  (no changes)
+ */
 
 /*****************************************************************************
  * now goes it loose...                                                      *

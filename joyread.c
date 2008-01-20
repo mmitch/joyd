@@ -1,9 +1,9 @@
 /*
- *    joyreadaxis.c - get the current state of a joystick axis
+ *    joyread.c - get the current state of a joystick axis or button
  *
  *    this program is part of:
  *
- *    joyd 0.0.5   ---   The Joystick Daemon
+ *    joyd 0.0.6   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -29,15 +29,9 @@
  * jstest.c Version 1.2 - Copyright (c) 1996-1999 Vojtech Pavlik
  */
 
-/*  joyd 0.0.5 2000-03-19
+/*  joyd 0.0.6 2000-04-06
  *
- *  joyreadaxis has become part of the joyd package
- */
-
-/*
- *  2do:
- *    supply Sys V start/stop script (for /etc/rc.d/)
- *  ? implement shift_axes like shift_keys
+ *  merged joyreadaxis.c and joyreadbutton.c into this file
  */
 
 /*****************************************************************************
@@ -58,7 +52,26 @@
 
 #define NAME_LENGTH 128
 
+#ifdef CHECK_AXIS
+// axis
+#ifdef CHECK_BUTTON
+// axis && button
+#error You cannot use both -DCHECK_AXIS and -DCHECK_BUTTON
+#else
+// axis && !button
 #define PROGRAM_NAME "joyreadaxis"
+#endif
+#else
+// !axis
+#ifdef CHECK_BUTTON
+// !axis && button
+#define PROGRAM_NAME "joyreadbutton"
+#else
+// !axis && !button
+#error You must either use -DCHECK_AXIS or -DCHECK_BUTTON
+#endif
+#endif
+
 
 int main (int argc, char **argv)
 {
@@ -70,7 +83,7 @@ int main (int argc, char **argv)
 	struct js_event js;
 
 	if (argc != 3 ) {
-		fprintf(stderr,"\nUsage: joyreadaxis <device> <axis>\n\n");
+		fprintf(stderr,"\nUsage: " PROGRAM_NAME " <device> <axis>\n\n");
 		exit(1);
 	}
 	if ((fd = open(argv[1], O_RDONLY)) < 0) {
@@ -92,14 +105,23 @@ int main (int argc, char **argv)
 		
 		switch(js.type & ~JS_EVENT_INIT) {
 		case JS_EVENT_BUTTON:
-			break;
-		case JS_EVENT_AXIS:
+#ifdef CHECK_BUTTON
 			if (js.number == atoi(argv[2])) {
 				printf("%d\n",js.value);
 			}
+#endif
+			break;
+		case JS_EVENT_AXIS:
+#ifdef CHECK_AXIS
+			if (js.number == atoi(argv[2])) {
+				printf("%d\n",js.value);
+			}
+#endif
 			break;
 		}
 	}
 	
 	return 0;
 }
+
+

@@ -8,10 +8,10 @@ SHELL=/bin/sh
 
 # name and version of package
 PROG=joyd
-VERSION=0.0.5
+VERSION=0.0.6
 
-OLDVERSION=0.0.4
-NEXTVERSION=0.0.6
+OLDVERSION=0.0.5
+NEXTVERSION=0.0.7
 
 #
 # How to create patches (outside both directories):
@@ -124,11 +124,30 @@ dist:
 
 joyd:	daemon.o joystick.o log.o options.o signal.o string.o joyd.o
 	$(CC) $(CFLAGS) 		\
+		-o $(srcdir)/joyd	\
 		daemon.o 		\
 		joystick.o 		\
 		log.o 			\
 		options.o 		\
 		signal.o 		\
 		string.o 		\
-		joyd.o 			\
-		-o $(srcdir)/joyd
+		joyd.o
+
+joyreadbutton.o:	joyread.c
+	$(CC) $(CFLAGS) -DCHECK_BUTTON -c -o joyreadbutton.o joyread.c
+
+joyreadaxis.o:		joyread.c
+	$(CC) $(CFLAGS) -DCHECK_AXIS -c -o joyreadaxis.o joyread.c
+
+#
+#
+#
+
+joyd.c:		joyd.h daemon.h joystick.h log.h options.h signal.h string.h
+daemon.c:	joyd.h daemon.h log.h
+joystick.c:	joyd.h joystick.h log.h
+log.c:		joyd.h log.h
+options.c:	joyd.h options.h string.h log.h
+signal.c:	joyd.h signal.h log.h options.h joystick.h
+string.c:	joyd.h string.h
+

@@ -1,3 +1,13 @@
+joyd 0.0.6 2000-04-06
+~~~~~~~~~~~~~~~~~~~~~
+ - merged joyreadbutton.c and joyreadaxis.c into joyread.c
+ - type cast of fgetc() to signed char because of compiler error
+   on PPC systems
+ - program version displayed on startup still was "0.0.3"
+ - a new entry to the joystick configuration file (CONFIG)
+
+
+
 joyd 0.0.5 2000-03-19
 ~~~~~~~~~~~~~~~~~~~~~
  - fixed a problem with joysticks that report buttons as axes with

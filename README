@@ -1,5 +1,5 @@
 
-	joyd 0.0.5   ---   The Joystick Daemon  (2000-03-19)
+	joyd 0.0.6   ---   The Joystick Daemon  (2000-04-06)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -269,6 +269,10 @@ style and finding the "external" bug in v0.0.1
 
 Derrick Pallas <omegakon@bigfoot.com> for reporting and fixing the
 problems with joysticks which report buttons as axes in v0.0.5
+
+Stephane Louise <luigi@fleming.u-psud.fr> for sending a patch to make
+joyd compile on PPC systems (type cast of fgetc() to signed char) in
+v0.0.6
 
 
   CONTACT
