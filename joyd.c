@@ -3,7 +3,7 @@
  *
  *    this is the main file of:
  *
- *    joyd 0.0.6   ---   The Joystick Daemon
+ *    joyd 0.0.7   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -92,6 +92,7 @@
 /*  joyd 0.0.4 2000-02-09
  *  joyd 0.0.5 2000-03-19
  *  joyd 0.0.6 2000-04-06
+ *  joyd 0.0.7 2000-04-13
  *
  *  (no changes)
  */
@@ -100,6 +101,7 @@
  *  2do:
  *  ? supply Sys V start/stop script (for /etc/rc.d/)
  *  ? implement shift_axes like shift_keys
+ *  ? autoconf support
  */
 
 /*****************************************************************************

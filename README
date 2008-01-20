@@ -1,5 +1,5 @@
 
-	joyd 0.0.6   ---   The Joystick Daemon  (2000-04-06)
+	joyd 0.0.7   ---   The Joystick Daemon  (2000-04-13)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -54,7 +54,7 @@ http://atrey.karlin.mff.cuni.cz/~vojtech/joystick/
   INSTALLATION
   ~~~~~~~~~~~~
 
-First, unpack the .tar.gz-archive.
+First unpack the .tar.gz-archive.
 
 If you want to change the installation defaults, take a look at
 "joyd.h" and edit it.
@@ -270,9 +270,9 @@ style and finding the "external" bug in v0.0.1
 Derrick Pallas <omegakon@bigfoot.com> for reporting and fixing the
 problems with joysticks which report buttons as axes in v0.0.5
 
-Stephane Louise <luigi@fleming.u-psud.fr> for sending a patch to make
-joyd compile on PPC systems (type cast of fgetc() to signed char) in
-v0.0.6
+Stephane Louise <luigi@fleming.u-psud.fr> for sending a patches to
+make joyd compile on PPC systems (problems with EOF and
+signed/unsigned char) in v0.0.6 and v0.0.7
 
 
   CONTACT

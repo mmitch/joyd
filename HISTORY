@@ -1,3 +1,10 @@
+joyd 0.0.7 2000-04-13
+~~~~~~~~~~~~~~~~~~~~~
+ - removed type cast of fgetc(), casting EOF to char instead
+ - changed some C++ style comment lines to C style comments
+
+
+
 joyd 0.0.6 2000-04-06
 ~~~~~~~~~~~~~~~~~~~~~
  - merged joyreadbutton.c and joyreadaxis.c into joyread.c

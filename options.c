@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.6   ---   The Joystick Daemon
+ *    joyd 0.0.7   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -43,7 +43,12 @@
 
 /*  joyd 0.0.6 2000-04-06
  *
- *  type cast of fgetc() to signed char (otherwise won't compile on PPC)
+ *  type cast of GetLine() to signed char (otherwise won't compile on PPC)
+ */
+
+/*  joyd 0.0.7 2000-04-13
+ *
+ *  type cast of GetLine() removed, EOF is cast to char instead
  */
 
 /*****************************************************************************
@@ -233,7 +238,7 @@ void ReadConfigFile()
 	section=0;
 	while (!eof) {
 		line=GetLine(fhandle);
-		if ((signed char) *line == EOF) {
+		if (*line == (char) EOF) {
 			eof=1;
 		} else {
 			cursor=Skip(line);

@@ -3,7 +3,7 @@
  *
  *    this program is part of:
  *
- *    joyd 0.0.6   ---   The Joystick Daemon
+ *    joyd 0.0.7   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -34,6 +34,11 @@
  *  merged joyreadaxis.c and joyreadbutton.c into this file
  */
 
+/*  joyd 0.0.7 2000-04-13
+ *
+ *  changed some C++ style comments to C style comments
+ */
+
 /*****************************************************************************
  * now goes it loose...                                                      *
  *****************************************************************************/
@@ -52,22 +57,32 @@
 
 #define NAME_LENGTH 128
 
+/*
+ * << NOTE >>
+ *
+ * You must either compile this file with -DCHECK_AXIS or
+ * -DCHECK_BUTTON to select whether to show the axis or button
+ * status. This makes the code somewhat ugly but changes apply to
+ * both programs at the same time.
+ *
+ */
+
 #ifdef CHECK_AXIS
-// axis
+/* __axis__ */
 #ifdef CHECK_BUTTON
-// axis && button
+/* axis && button */
 #error You cannot use both -DCHECK_AXIS and -DCHECK_BUTTON
 #else
-// axis && !button
+/* axis && !button */
 #define PROGRAM_NAME "joyreadaxis"
 #endif
 #else
-// !axis
+/* __!axis__ */
 #ifdef CHECK_BUTTON
-// !axis && button
+/* !axis && button */
 #define PROGRAM_NAME "joyreadbutton"
 #else
-// !axis && !button
+/* !axis && !button */
 #error You must either use -DCHECK_AXIS or -DCHECK_BUTTON
 #endif
 #endif

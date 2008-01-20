@@ -27,7 +27,7 @@ Left              | Axis 1 low       | [a] 0 to -32767
   =================================
 
 
-  As of joyd version 0.0.6 you will find info on these joysticks:
+  As of joyd version 0.0.7 you will find info on these joysticks:
 
     - Gravis GamePad Pro (USB)
     - Microsoft Sidewinder Force Feedback Pro
@@ -45,7 +45,7 @@ Left              | Axis 1 low       | [a] 0 to -32767
 
 added by Stephane Louise <luigi@fleming.u-psud.fr>
 
-        Driver is UBS backport form 2.3.42 to 2.2.14
+        Driver is USB backport from 2.3.42 to 2.2.14
         (shouldn't be different in 2.4 final)
 
 Action            | Event            | Values ([a]nalog / [d]igital)
@@ -53,7 +53,7 @@ Action            | Event            | Values ([a]nalog / [d]igital)
 Left              | Axis 1 low       | [d] -32767
 Right             | Axis 1 high      | [d]  32767
 Up                | Axis 2 low       | [d] -32767
-Down              | Axis 2 high      | [d]  32768
+Down              | Axis 2 high      | [d]  32767
 Button "Red(Left)"| Button 1         |
 Button "Yellow(B)"| Button 2         |
 Button "Green(R)" | Button 3         |
@@ -63,7 +63,7 @@ Button "R1"       | Button 6         |
 Button "L2"       | Button 7         |
 Button "R2"       | Button 8         |
 Button "Select"   | Button 9         |
-Button "Start"    | Butoon 10        |
+Button "Start"    | Button 10        |
 
 
 #############################################################################

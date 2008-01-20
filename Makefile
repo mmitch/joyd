@@ -8,17 +8,17 @@ SHELL=/bin/sh
 
 # name and version of package
 PROG=joyd
-VERSION=0.0.6
+VERSION=0.0.7
 
-OLDVERSION=0.0.5
-NEXTVERSION=0.0.7
+OLDVERSION=0.0.6
+NEXTVERSION=0.0.8
 
 #
 # How to create patches (outside both directories):
 # LC_ALL=C TZ=UTC0 diff -Naru old-path new-path
 #
 # How to publish:
-# - change ALL version numbers
+# - change ALL version numbers (manpages!)
 # - www.h.shuttle.de
 # - metalab.unc.edu
 # - www.freshmeat.net
