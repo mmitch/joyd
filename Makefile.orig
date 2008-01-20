@@ -8,10 +8,10 @@ SHELL=/bin/sh
 
 # name and version of package
 PROG=joyd
-VERSION=0.0.7
+VERSION=0.0.8
 
-OLDVERSION=0.0.6
-NEXTVERSION=0.0.8
+OLDVERSION=0.0.7
+NEXTVERSION=0.0.9
 
 #
 # How to create patches (outside both directories):

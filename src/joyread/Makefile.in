@@ -1,0 +1,60 @@
+
+# GNU stuff
+SHELL = /bin/sh
+VPATH = @srcdir@
+
+subdirs = @subdirs@
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+infodir = $(prefix)/info
+libdir = $(prefix)/lib/gnudl
+mandir = $(prefix)/man
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = $(CPPFLAGS) @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+INSTALL = @INSTALL@
+
+#
+# -----
+#
+
+all:	joyreadbutton	joyreadaxis
+
+install:	all
+	$(top_srcdir)/mkinstalldirs $(bindir)
+	$(INSTALL) $(srcdir)/joyreadbutton $(bindir)
+	$(INSTALL) $(srcdir)/joyreadaxis $(bindir)
+	chmod 755 $(bindir)/joyreadbutton
+	chmod 755 $(bindir)/joyreadaxis
+
+uninstall:
+	rm -f $(bindir)/joyreadbutton
+	rm -f $(bindir)/joyreadaxis
+	-rmdir $(bindir)
+	-rmdir $(prefix)
+
+clean:
+	rm -f $(srcdir)/joyreadbutton
+	rm -f $(srcdir)/joyreadaxis
+	rm -f $(srcdir)/*.o
+	rm -f $(srcdir)/*~
+
+distclean:	clean
+	rm -f Makefile config.h
+
+#
+# -----
+#
+
+joyreadbutton.o:	joyread.c
+	$(CC) $(CFLAGS) -DCHECK_BUTTON -c -o joyreadbutton.o joyread.c
+
+joyreadaxis.o:		joyread.c
+	$(CC) $(CFLAGS) -DCHECK_AXIS -c -o joyreadaxis.o joyread.c
+

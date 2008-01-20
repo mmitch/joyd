@@ -2,9 +2,9 @@ Begin3
 
 Title:		joyd
 
-Version:	0.0.7
+Version:	0.2.0
 
-Entered-date:	13APR00
+Entered-date:	22APR00
 
 Description:	A very flexible program that allows you to execute
 		commands by a joystick or joypad attached to your
@@ -21,7 +21,7 @@ Maintained-by:	mitch@uni.de (Christian Garbs)
 Primary-site:	http://www.h.shuttle.de/mitch/joyd.en.html
 
 Alternate-site:	MetaLab.unc.edu /pub/Linux/hardware/daemons
-		26k joyd-0.0.7.tar.gz
+		48k joyd-0.2.0.tar.gz
 
 Platforms:	any input device supported by the Linux Joystick
 		driver

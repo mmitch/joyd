@@ -1,0 +1,123 @@
+# name and version of package
+PROG=joyd
+VERSION=0.2.0
+
+OLDVERSION=0.0.7
+NEXTVERSION=0.2.1
+
+#
+# How to create patches (outside both directories):
+# LC_ALL=C TZ=UTC0 diff -Naru old-path new-path
+#
+# How to publish:
+# - change ALL version numbers (manpages!)
+# - www.h.shuttle.de
+# - metalab.unc.edu
+# - www.freshmeat.net
+# - server51.freshmeat.net
+# - new version in Makefile
+#
+# How to apply patches (in "old" directory):
+# patch -Np1
+#
+
+# name of tar.gz-archive
+TARGZ=$(PROG)-$(VERSION)
+
+# GNU stuff
+SHELL = /bin/sh
+VPATH = @srcdir@
+
+subdirs = @subdirs@
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+infodir = $(prefix)/info
+libdir = $(prefix)/lib/gnudl
+mandir = $(prefix)/man
+docdir = $(prefix)/doc
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = $(CPPFLAGS) @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+INSTALL = @INSTALL@
+
+#
+# -----
+#
+
+### SUBDIRS automatisch?
+subdirs=src doc examples
+### /bin/rm irgendwie automatisch?
+
+all:
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) all) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+
+install:
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) install) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+
+uninstall:
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) uninstall) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+	-rmdir $(prefix)
+
+clean:
+	rm -f *~
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) clean) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+
+distclean: clean
+	rm -f Makefile config.h config.status config.cache config.log stamp.h
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) distclean) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+
+mostlyclean:	clean
+realclean:	clean
+
+diff:	distclean
+	(\
+	cd ..; \
+	export LC_ALL=C; \
+	export TZ=UTC0; \
+	diff -Naru $(PROG)-$(OLDVERSION) $(PROG)-$(VERSION) | \
+	gzip -9 > $(PROG)-patch-$(OLDVERSION)-to-$(VERSION).gz \
+	)
+
+patch:
+	gunzip < $(PROG)-patch-$(VERSION)-to-$(NEXTVERSION).gz | patch -Np1
+
+dist:	distclean
+	rm -rf $(srcdir)/$(TARGZ)
+	mkdir $(srcdir)/$(TARGZ)
+	@for dir in ${subdirs}; do \
+	  cp -R $$dir $(srcdir)/$(TARGZ) ; \
+	done
+	cp $(srcdir)/COPYING $(srcdir)/$(TARGZ)
+	cp $(srcdir)/HISTORY $(srcdir)/$(TARGZ)
+	cp $(srcdir)/INSTALL $(srcdir)/$(TARGZ)
+	cp $(srcdir)/Makefile* $(srcdir)/$(TARGZ)
+	cp $(srcdir)/config* $(srcdir)/$(TARGZ)
+	cp $(srcdir)/joyd.lsm $(srcdir)/$(TARGZ)
+	cp $(srcdir)/install-sh $(srcdir)/$(TARGZ)
+	cp $(srcdir)/mkinstalldirs $(srcdir)/$(TARGZ)
+	chmod 777 $(srcdir)/$(TARGZ)
+	chmod -R 777 $(srcdir)/$(TARGZ)/*
+	tar -c $(srcdir)/$(TARGZ) -zvf $(srcdir)/$(TARGZ).tar.gz
+	rm  -rf $(srcdir)/$(TARGZ)
+

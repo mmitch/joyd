@@ -14,13 +14,13 @@
 .TP 0.5i
 .B "\\$1 "
 ..
-.TH JOYD 1 "Apr 13 2000" "v0.0.7"
+.TH JOYD 1 "Apr 22 2000" "v0.2.0"
 .SH NAME
 .B joyd
 \- a joystick daemon
 .SH SYNOPSIS
 .B joyd
-.RB [ \-v | configfile ]
+.RB [ \-v | \-\-version | configfile ]
 .
 .SH DESCRIPTION
 .B joyd
@@ -44,6 +44,9 @@ is also able to log its output to syslog.
 .PP
 .SH "COMMAND\-LINE OPTIONS"
 .It -v
+.B joyd
+will print its version number and exit.
+.It --version
 .B joyd
 will print its version number and exit.
 .It configfile

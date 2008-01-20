@@ -3,7 +3,7 @@
  *
  *    this is the main file of:
  *
- *    joyd 0.0.7   ---   The Joystick Daemon
+ *    joyd 0.2.0   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -97,11 +97,16 @@
  *  (no changes)
  */
 
+/*  joyd 0.2.0 2000-04-22
+ *
+ *  - "joyd --version" also prints the version number (like "joyd -v")
+ *  - print of version number additionally prints short help text
+ */
+
 /*
  *  2do:
  *  ? supply Sys V start/stop script (for /etc/rc.d/)
  *  ? implement shift_axes like shift_keys
- *  ? autoconf support
  */
 
 /*****************************************************************************
@@ -143,8 +148,10 @@ TCONFIG config;
 int main (int argc, char **argv)
 /* simple main program */
 {
-	if ((argc > 1) && (strcmp(argv[1],PRINT_VERSION) == 0)) {
+	if ((argc != 2) || (strcmp(argv[1],PRINT_VERSION) == 0) ||
+	                   (strcmp(argv[1],PRINT_VERSION_LONG) == 0)) {
 		printf(PROGRAM_VERSION "\n");
+		printf(PROGRAM_INFOTEXT "\n");
 		exit(0);
 	};
 

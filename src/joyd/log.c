@@ -1,9 +1,9 @@
 /*
- *    daemon.c - daemon functionality
+ *    log.c - logging functionality
  *
  *    this file is part of:
  *
- *    joyd 0.0.7   ---   The Joystick Daemon
+ *    joyd 0.2.0   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -35,6 +35,7 @@
  *  joyd 0.0.5 2000-03-19
  *  joyd 0.0.6 2000-04-06
  *  joyd 0.0.7 2000-04-13
+ *  joyd 0.2.0 2000-04-22
  *
  *  (no changes)
  */
@@ -48,16 +49,14 @@
  * system include files
  */
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <syslog.h>
 
 /*
  * my headers and definitions
  */
 
 #include "joyd.h"
-#include "daemon.h"
 #include "log.h"
 
 /*
@@ -65,27 +64,22 @@
  */
 
 
-void ForkToBackground()
-/* Fork into background (daemon) mode */
+void Print(FILE *const fhandle,const char *const string1,const char *const string2)
+/* This Logs a message to a file and syslog */
 {
-	pid_t pid;
-	char buffer[48];
-
-	if ((pid = fork()) < 0) {
-		Print(stderr,"exit: error while changing to daemon mode",NOTHING);
-		exit(3);
+	if ((fhandle!=stdout) || (config.stdout)) {
+		fprintf(fhandle,"%s%s\n",string1,string2);
+		fflush(fhandle);
 	}
-
-	if (pid != 0) {
-		if (config.debug > 1) {
-			sprintf(buffer,"%i",pid);
-			Print(stdout,"start routine exits now, daemon created: pid=",buffer);
+	
+	/* This might be slow, but I'm lazy: open, log, close - all in one place! */
+	if (config.syslog) {
+		openlog(PROGRAM_NAME, LOG_CONS | LOG_PID, SYSLOG_FACILITY);
+		if (fhandle == stderr) {
+			syslog(SYSLOG_PRIO_ERROR,"%s%s",string1,string2);
+		} else {
+			syslog(SYSLOG_PRIO_INFO,"%s%s",string1,string2);
 		}
-		exit(0);
-	}
-
-	if (config.debug > 1) {
-		sprintf(buffer,"%i",getpid());
-		Print(stdout,"daemon created and alive: pid=",buffer);
+		closelog();
 	}
 }

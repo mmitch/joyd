@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.7   ---   The Joystick Daemon
+ *    joyd 0.2.0   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -46,6 +46,11 @@
  *
  *  type cast of fgetc() removed again
  *  using feof() instead of EOF to determine end of file
+ */
+
+/*  joyd 0.2.0 2000-04-22
+ *
+ *  (no changes)
  */
 
 /*****************************************************************************

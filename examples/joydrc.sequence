@@ -1,0 +1,35 @@
+#
+# sample configuration file for joyd
+#
+# This demonstrates the use of control sequences.
+# It uses a temporary file /tmp/joydtmp
+# The command "echo ---OK---" is executed when you have
+# entered the following sequence:
+# Up, down, left, right, button 1
+#
+# Use ctrl-c to quit joyd.
+#
+
+[general]
+# Some general settings
+device 	/dev/js0
+daemon	0
+debug	1
+stdout	1
+syslog	0
+
+[actions]
+
+# These are the axes (record the commands)
+1	0	/bin/echo -n Left  >> /tmp/joydtmp
+2	0	/bin/echo -n Right >> /tmp/joydtmp
+4	0	/bin/echo -n Up    >> /tmp/joydtmp
+8	0	/bin/echo -n Down  >> /tmp/joydtmp
+
+# This is the button (checks whether the recorded commands are ok)
+0	1	touch /tmp/joydtmp;/usr/bin/test "`/bin/cat /tmp/joydtmp`" = "UpDownLeftRight" && echo ---OK---;rm /tmp/joydtmp
+# At first the temporary file is touched (otherwise there might be
+# errors when the file is missing).
+# Then the contents of the temporary files are checked. If they are
+# OK, the echo command is executed.
+# Finally the temporary file is removed.

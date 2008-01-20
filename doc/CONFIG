@@ -27,7 +27,7 @@ Left              | Axis 1 low       | [a] 0 to -32767
   =================================
 
 
-  As of joyd version 0.0.7 you will find info on these joysticks:
+  As of joyd version 0.2.0 you will find info on these joysticks:
 
     - Gravis GamePad Pro (USB)
     - Microsoft Sidewinder Force Feedback Pro
@@ -89,7 +89,7 @@ added by Christian Garbs <mitch@uni.de>
 (on parallel port, see /usr/src/linux/Documentation/joystick-parport.txt)
 
 Action            | Event            | Values ([a]nalog / [d]igital)
-------------------+------------------+----------------------------------------
+------------------+------------------+---------------------------------------
 Left              | Axis 1 low       | [d] -32767
 Right             | Axis 1 high      | [d]  32767
 Up                | Axis 2 low       | [d] -32767

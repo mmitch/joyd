@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.0.7   ---   The Joystick Daemon
+ *    joyd 0.2.0   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -49,6 +49,11 @@
 /*  joyd 0.0.7 2000-04-13
  *
  *  type cast of GetLine() removed, EOF is cast to char instead
+ */
+
+/*  joyd 0.2.0 2000-04-22
+ *
+ *  (no changes)
  */
 
 /*****************************************************************************

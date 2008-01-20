@@ -1,5 +1,5 @@
 
-	joyd 0.0.7   ---   The Joystick Daemon  (2000-04-13)
+	joyd 0.2.0   ---   The Joystick Daemon  (2000-04-22)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -12,12 +12,17 @@
 
 1) Unpack the archive
 
-2) "make", "make install"
+2) "configure", "make", "make install"
 
-3) Start "joyd", use your joystick, watch the screen, exit joyd by
-   pressing ctrl-c
+3) Enter the examples/ subdirectory
 
-4) Take a look at "joydrc" to see why it has done what it has done
+4) Start "joyd"
+
+5) Use your joystick and watch the screen
+
+6) Exit joyd by pressing ctrl-c
+
+7) Take a look at "joydrc" to see why it has done what it has done
 
 
   INTRODUCTION
@@ -27,26 +32,27 @@ joyd is a daemon that allows you to trigger commands on your computer
 by using your joystick. It can execute any program.
 
 You can bind commands to single buttons, movements of your stick or
-combinations. There can be as much commands as you like, you can even
-bind multiple commands to one combination.
+combinations of both. There can be as much commands as you like, you
+can even bind multiple commands to one combination.
 
 joyd uses very few resources: when nothing happens at the joystick
 port, it just sleeps, needing no CPU time.
 
-When run in daemon mode, joyd switches to the background. It can
-itself still be controlled by joystick commands or signals (e.g.
-SIGHUP). joyd is also able to log its output to syslog.
+When run in daemon mode, joyd switches to the background. It can still
+be controlled by joystick commands or signals (e.g.  SIGHUP). joyd is
+also able to log its output to syslog.
 
 
   REQUIREMENTS
   ~~~~~~~~~~~~
 
-You need a device that is supported by the Linux Joystick Driver.
-You need to have the Linux Joystick Driver installed properly.
-You need the libraries and header files of the Linux Joystick Driver.
+- You need a device that is supported by the Linux Joystick Driver.
+- You need to have the Linux Joystick Driver installed properly.
+- You need the libraries and header files of the Linux Joystick Driver.
 
 The Linux Joystick Driver is included with the recent Linux Kernel
 Sources available at http://www.kernel.org
+
 You can also download the Linux Joystick Driver directly from
 http://atrey.karlin.mff.cuni.cz/~vojtech/joystick/
 
@@ -56,16 +62,21 @@ http://atrey.karlin.mff.cuni.cz/~vojtech/joystick/
 
 First unpack the .tar.gz-archive.
 
+Then run "./configure". You set some variables here, have a look at
+either "./configure --help" or the INSTALL file.
+
 If you want to change the installation defaults, take a look at
-"joyd.h" and edit it.
+"src/joyd/joyd.h" and edit it.
 
-Then type "make" to compile the binary. You can install the binary and
-the manpages by typing "make install" (you propably need to be root to
-do this). You can acces the manpages by typing "man 1 joyd" or "man 5
-joydrc".
+Then type "make" to compile the binaries. You can install the
+binaries, the manpages and the documentation by typing "make install"
+(you propably need to be root to do this). You can acces the manpages
+by typing "man 1 joyd" or "man 5 joydrc". The documentation is
+installed under "/usr/local/doc/joyd" by default.
 
-If you want to uninstall the binary and the manpages, then type
-"make uninstall" (again, you propably need to be root).
+If you want to uninstall the binaries, the manpages and the
+documentation, then type "make uninstall" (again, you propably need to
+be root).
 
 
   USING JOYD  -  see also joyd(1)
@@ -75,8 +86,8 @@ Start joyd as "joyd". It accepts one command line argument, this is
 where joyd will look for a configuration file. If no configuration
 file is given, joyd will use the compiled in default.
 
-If joyd is started with the command line argument "-v", it will print
-its version number and exit.
+If joyd is started with the command line argument "-v" or "--version",
+it will print its version number and exit.
 
 When joyd is started, it will either run in normal mode or in daemon
 (background) mode. This can be set within the configuration file. If
@@ -109,12 +120,14 @@ file (for example "kill -HUP <PID>", where PID can be found out using
   CONFIGURATION
   ~~~~~~~~~~~~~
 
-All configuration is done in the configuration file or in the installation
-defaults. There are some example configuration files within this archive
-(joydrc*) for you to look at and test.
+All configuration is done in the configuration file or in the
+installation defaults. After installing the documentation, there are
+some example configuration files at "/usr/local/doc/joyd" named
+"joydrc*" for you to look at and test.
 
 For example, use the "joydrc" example configuration file to find out
-the numbers of your axes and buttons by typing "joyd joydrc".
+the numbers of your axes and buttons by changing to "/usr/local/doc/joyd"
+and typing "joyd joydrc".
 
 If you don't want to guess the numbers of your axes and buttons then
 have a look at the file CONFIG. Perhaps your joystick is already

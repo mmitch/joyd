@@ -1,7 +1,7 @@
 /* joyd.h
  *
  * part of
- * joyd 0.0.7 2000-04-13
+ * joyd 0.2.0 2000-04-22
  *
  */
 
@@ -78,7 +78,7 @@
 #define PROGRAM_NAME "joyd"
 
 /* program version */
-#define PROGRAM_VERSION PROGRAM_NAME " 0.0.7 2000-04-13"
+#define PROGRAM_VERSION PROGRAM_NAME " 0.2.0 2000-04-22"
 
 /* length of buffer for joypad name */
 #define NAME_LENGTH 128
@@ -91,6 +91,13 @@
 
 /* the command line argument used to show the version of joyd */
 #define PRINT_VERSION "-v"
+
+/* the long command line argument used to show the version of joyd */
+#define PRINT_VERSION_LONG "--version"
+
+/* the informative text to show with the version number */
+#define PROGRAM_INFOTEXT "usage: " PROGRAM_NAME " {configuration file}\n" \
+                         "documentation is installed under " DOCDIR
 
 /*
  * The structure for calibration values

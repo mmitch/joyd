@@ -1,3 +1,12 @@
+joyd 0.2.0 2000-04-22
+~~~~~~~~~~~~~~~~~~~~~
+ - support of GNU autoconf/configure
+ - documentation is now by default installed under /usr/local/doc/joyd
+ - added a configuration example for control sequences (joydrc.sequence)
+ - "joyd --version" will now also print version number (like "joyd -v")
+
+
+
 joyd 0.0.7 2000-04-13
 ~~~~~~~~~~~~~~~~~~~~~
  - removed type cast of fgetc(), casting EOF to char instead

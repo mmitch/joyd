@@ -1,0 +1,74 @@
+
+# GNU stuff
+SHELL = /bin/sh
+VPATH = @srcdir@
+
+subdirs = @subdirs@
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+infodir = $(prefix)/info
+libdir = $(prefix)/lib/gnudl
+mandir = $(prefix)/man
+docdir = $(prefix)/doc
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@ -DDOCDIR=\"$(docdir)/joyd\"
+CFLAGS = $(CPPFLAGS) @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+INSTALL = @INSTALL@
+
+#
+# -----
+#
+
+all:	joyd
+
+install:	all
+	$(top_srcdir)/mkinstalldirs $(bindir)
+	$(INSTALL) $(srcdir)/joyd $(bindir)
+	chmod 755 $(bindir)/joyd
+
+uninstall:
+	rm -f $(bindir)/joyd
+	-rmdir $(bindir)
+	-rmdir $(prefix)
+
+clean:
+	rm -f $(srcdir)/joyd
+	rm -f $(srcdir)/*.o
+	rm -f $(srcdir)/*~
+
+distclean:	clean
+	rm -f Makefile config.h
+
+#
+# -----
+#
+
+joyd:	daemon.o joystick.o log.o options.o signal.o string.o joyd.o
+	$(CC) $(CFLAGS)				\
+		-o $(srcdir)/joyd		\
+		daemon.o 			\
+		joystick.o 			\
+		log.o 				\
+		options.o 			\
+		signal.o 			\
+		string.o 			\
+		joyd.o
+
+#
+#
+#
+
+joyd.c:		joyd.h daemon.h joystick.h log.h options.h signal.h string.h
+daemon.c:	joyd.h daemon.h log.h
+joystick.c:	joyd.h joystick.h log.h
+log.c:		joyd.h log.h
+options.c:	joyd.h options.h string.h log.h
+signal.c:	joyd.h signal.h log.h options.h joystick.h
+string.c:	joyd.h string.h
+
