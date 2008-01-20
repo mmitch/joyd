@@ -3,7 +3,7 @@
  *
  *    this file is part of:
  *
- *    joyd 0.2.1   ---   The Joystick Daemon
+ *    joyd 0.2.2   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -43,6 +43,11 @@
 /*  joyd 0.2.1 2000-05-25
  *
  *  - config.stdout renamed to config.std_out
+ */
+
+/*  joyd 0.2.2 2000-10-11
+ *
+ *  (no changes)
  */
 
 /*****************************************************************************

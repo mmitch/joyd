@@ -1,3 +1,11 @@
+joyd 0.2.2 2000-10-11
+~~~~~~~~~~~~~~~~~~~~~
+- a call without any command line arguments now successfully
+  reads the compiled in default configuration file
+- fixed some typos in the documentation
+
+
+
 joyd 0.2.1 2000-05-25
 ~~~~~~~~~~~~~~~~~~~~~
  - fixed permissions in tar.gz-archive (everything was 0777)

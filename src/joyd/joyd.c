@@ -3,7 +3,7 @@
  *
  *    this is the main file of:
  *
- *    joyd 0.2.1   ---   The Joystick Daemon
+ *    joyd 0.2.2   ---   The Joystick Daemon
  *
  *    2000 (C) by Christian Garbs <mitch@uni.de>
  */
@@ -108,6 +108,12 @@
  *  (no changes)
  */
 
+/*  joyd 0.2.2 2000-10-11
+ *
+ *  - a call without any command line arguments now successfully
+ *    reads the compiled in default configuration file
+ */
+
 /*
  *  2do:
  *  ? supply Sys V start/stop script (for /etc/rc.d/)
@@ -153,8 +159,16 @@ TCONFIG config;
 int main (int argc, char **argv)
 /* simple main program */
 {
-	if ((argc != 2) || (strcmp(argv[1],PRINT_VERSION) == 0) ||
-	                   (strcmp(argv[1],PRINT_VERSION_LONG) == 0)) {
+	/* don't tell me that this condition looks ugly... */
+	if (    (argc > 2)
+	     || (
+                   (argc == 2)
+                && (
+                      (strcmp(argv[1],PRINT_VERSION)      == 0)
+		   || (strcmp(argv[1],PRINT_VERSION_LONG) == 0)
+		   )
+                 )
+           ) {
 		printf(PROGRAM_VERSION "\n");
 		printf(PROGRAM_INFOTEXT "\n");
 		exit(0);

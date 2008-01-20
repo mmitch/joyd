@@ -1,7 +1,7 @@
 /* joyd.h
  *
  * part of
- * joyd 0.2.1 2000-05-25
+ * joyd 0.2.2 2000-10-11
  *
  */
 
@@ -79,7 +79,7 @@
 #define PROGRAM_NAME "joyd"
 
 /* program version */
-#define PROGRAM_VERSION PROGRAM_NAME " 0.2.1 2000-05-25"
+#define PROGRAM_VERSION PROGRAM_NAME " 0.2.2 2000-10-11"
 
 /* length of buffer for joypad name */
 #define NAME_LENGTH 128

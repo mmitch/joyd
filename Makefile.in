@@ -1,9 +1,9 @@
 # name and version of package
 PROG=joyd
-VERSION=0.2.1
+VERSION=0.2.2
 
-OLDVERSION=0.2.0
-NEXTVERSION=0.2.2
+OLDVERSION=0.2.1
+NEXTVERSION=0.2.3
 
 #
 # How to create patches (outside both directories):

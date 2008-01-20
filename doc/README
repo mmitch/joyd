@@ -1,5 +1,5 @@
 
-	joyd 0.2.1   ---   The Joystick Daemon  (2000-05-25)
+	joyd 0.2.2   ---   The Joystick Daemon  (2000-10-11)
 
 	2000 (C) by Christian Garbs <mitch@uni.de>
 
@@ -227,7 +227,7 @@ If your joystick has more axes than there are in this section, the
 other axes will use the calmin and calmax default values.
 
 
-The last section is the "[action]" section. It binds the commands to
+The last section is the "[actions]" section. It binds the commands to
 the joystick. The lines are in the format
 
   a	b	c
@@ -277,6 +277,12 @@ $ joyreadbutton /dev/js1 0
   THANKS
   ~~~~~~
 
+Stephane Louise <luigi@fleming.u-psud.fr> for generating a joyd PPC
+binary RPM.
+
+Piotr Sieklucki <psiekl@venus.ci.uw.edu.pl> for building the joyd
+RPM packages.
+
 Ludwig Nussel <ludwig.nussel@gmx.de> for finally pointing out the
 reason for the error with config.stdout on some systems (the error
 has been fixed in v0.2.1)
@@ -308,11 +314,11 @@ http://www.h.shuttle.de/mitch/joyd.en.html
 If you prefer German to English, then try this address:
 http://www.h.shuttle.de/mitch/joyd.de.html
 
-joyd should also be available from MetaLab.unc.edu in the directory
-/pub/Linux/hardware/daemons.
-
 joyd is also listed on freshmeat:
-http://www.freshmeat.net/appindex/2000/01/11/947625771.html
+http://www.freshmeat.net/projects/joyd/
+
+joyd should also be available from MetaLab.unc.edu in the directory
+/pub/Linux/hardware/daemons
 
 
 				________________________________
